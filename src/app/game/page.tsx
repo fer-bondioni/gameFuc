@@ -9,6 +9,24 @@ import { Question, Answer, Character } from '@/types/game';
 import { supabase } from '@/lib/supabase';
 import { motion, AnimatePresence } from 'framer-motion';
 
+// Debug function
+const debugSupabase = async () => {
+  try {
+    const { data: questions, error: questionsError } = await supabase
+      .from('questions')
+      .select('*')
+      .order('order_number');
+    
+    console.log('Questions:', questions);
+    console.log('Questions Error:', questionsError);
+    
+    return { questions, questionsError };
+  } catch (error) {
+    console.error('Supabase Debug Error:', error);
+    return { error };
+  }
+};
+
 export default function GamePage() {
   const { currentStep, userName, currentQuestionIndex, answers, resultCharacter } = useGameStore();
   const [questions, setQuestions] = useState<Question[]>([]);
@@ -17,11 +35,23 @@ export default function GamePage() {
 
   useEffect(() => {
     async function loadGameData() {
+      console.log('Starting to load game data...');
+      
+      // Debug Supabase connection
+      const debug = await debugSupabase();
+      console.log('Debug results:', debug);
+
       // Load questions
-      const { data: questionsData } = await supabase
+      const { data: questionsData, error: questionsError } = await supabase
         .from('questions')
         .select('*')
         .order('order_number');
+      
+      if (questionsError) {
+        console.error('Questions Error:', questionsError);
+        setLoading(false);
+        return;
+      }
       
       if (questionsData) {
         setQuestions(questionsData);
