@@ -25,11 +25,12 @@ export default function StatsPage() {
       .on(
         'postgres_changes',
         {
-          event: 'INSERT',
+          event: '*',
           schema: 'public',
           table: 'user_responses'
         },
         () => {
+          console.log('Received database change event');
           loadStats();
         }
       )
@@ -41,18 +42,26 @@ export default function StatsPage() {
   }, []);
 
   async function loadStats() {
-    const { data } = await supabase
+    console.log('Loading stats...');
+    const { data, error } = await supabase
       .from('characters')
       .select(`
         *,
-        user_responses (count)
+        count: user_responses(count)
       `);
 
+    if (error) {
+      console.error('Error loading stats:', error);
+      return;
+    }
+
     if (data) {
+      console.log('Received stats data:', data);
       const characterStats = data.map(char => ({
         ...char,
-        count: char.user_responses?.length || 0
+        count: char.count[0]?.count || 0
       }));
+      console.log('Processed stats:', characterStats);
       setStats(characterStats);
       setLoading(false);
     }

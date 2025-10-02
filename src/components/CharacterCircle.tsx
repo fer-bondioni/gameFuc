@@ -12,7 +12,16 @@ const MIN_SIZE = 60;
 const MAX_SIZE = 200;
 
 export function CharacterCircle({ character, count, maxCount }: CharacterCircleProps) {
-  const size = Math.max(MIN_SIZE, (count / maxCount) * MAX_SIZE);
+  const [animatedCount, setAnimatedCount] = useState(0);
+  const [animatedSize, setAnimatedSize] = useState(MIN_SIZE);
+
+  useEffect(() => {
+    // Animate the count up from previous value
+    setAnimatedCount(count);
+    // Calculate and animate the new size
+    const newSize = Math.max(MIN_SIZE, (count / Math.max(maxCount, 1)) * MAX_SIZE);
+    setAnimatedSize(newSize);
+  }, [count, maxCount]);
   
   return (
     <motion.div
@@ -23,8 +32,8 @@ export function CharacterCircle({ character, count, maxCount }: CharacterCircleP
       <motion.div
         layout
         animate={{
-          width: size,
-          height: size,
+          width: animatedSize,
+          height: animatedSize,
         }}
         transition={{
           type: "spring",
@@ -38,7 +47,13 @@ export function CharacterCircle({ character, count, maxCount }: CharacterCircleP
           animate={{ scale: 1, opacity: 1 }}
           transition={{ delay: 0.2 }}
         >
-          {count}
+          <motion.span
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            key={animatedCount}
+          >
+            {animatedCount}
+          </motion.span>
         </motion.div>
         <motion.div
           className="absolute inset-0 bg-white opacity-20"
@@ -65,7 +80,15 @@ export function CharacterCircle({ character, count, maxCount }: CharacterCircleP
         className="text-center"
       >
         <h3 className="font-bold">{character.name}</h3>
-        <p className="text-sm text-gray-600">{count} players</p>
+        <motion.p 
+          className="text-sm text-gray-600"
+          key={animatedCount}
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          {animatedCount} players
+        </motion.p>
       </motion.div>
     </motion.div>
   );
