@@ -16,7 +16,7 @@ export function ResultCard({ character, userName }: ResultCardProps) {
       className="max-w-2xl mx-auto"
     >
       <Card>
-        <h2 className="text-3xl font-bold text-center mb-4">
+        <h2 className="text-3xl font-bold text-center mb-4 text-slate-800 dark:text-slate-100">
           {userName}, you are...
         </h2>
         <motion.div
@@ -25,7 +25,7 @@ export function ResultCard({ character, userName }: ResultCardProps) {
           transition={{ delay: 0.5 }}
           className="text-center"
         >
-          <h3 className="text-4xl font-bold text-blue-600 mb-4">
+          <h3 className="text-5xl font-extrabold mb-4 bg-gradient-to-r from-blue-600 to-blue-800 dark:from-blue-400 dark:to-blue-600 bg-clip-text text-transparent">
             {character.name}
           </h3>
           {character.image_url && (

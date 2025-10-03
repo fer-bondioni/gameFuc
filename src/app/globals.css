@@ -6,11 +6,22 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #171717;
-  --primary: #3b82f6;
-  --primary-hover: #2563eb;
-  --secondary: #6b7280;
-  --secondary-hover: #4b5563;
+  --foreground: #0f172a;
+  --primary: #2563eb;
+  --primary-hover: #1e40af;
+  --secondary: #4b5563;
+  --secondary-hover: #374151;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0f172a;
+    --foreground: #f8fafc;
+    --primary: #3b82f6;
+    --primary-hover: #60a5fa;
+    --secondary: #64748b;
+    --secondary-hover: #94a3b8;
+  }
 }
 
 body {
@@ -22,8 +33,8 @@ body {
 @layer components {
   .button-base {
     padding: 1.5rem;
-    border-radius: 0.5rem;
-    font-weight: 500;
+    border-radius: 0.75rem;
+    font-weight: 600;
     transition: all 200ms;
     text-align: center;
     background-size: cover;
@@ -33,6 +44,7 @@ body {
     align-items: center;
     justify-content: center;
     position: relative;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   }
 
   .button-base::before {
@@ -42,19 +54,29 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.4);
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7));
     border-radius: inherit;
     opacity: 0;
-    transition: opacity 0.2s;
+    transition: opacity 0.2s, transform 0.2s;
+  }
+
+  .button-base:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
   }
 
   .button-base:hover::before {
     opacity: 1;
   }
 
+  .button-base:active {
+    transform: translateY(0);
+  }
+
   .button-primary {
     background-color: var(--primary);
     color: white;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
   }
 
   .button-primary:hover {
@@ -64,9 +86,24 @@ body {
   .button-secondary {
     background-color: var(--secondary);
     color: white;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
   }
 
   .button-secondary:hover {
     background-color: var(--secondary-hover);
+  }
+
+  /* Style for buttons with background images */
+  .button-base[style*="background-image"] {
+    border: 2px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .button-base[style*="background-image"]::before {
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.7));
+    opacity: 1;
+  }
+
+  .button-base[style*="background-image"]:hover::before {
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.8));
   }
 }
