@@ -2,6 +2,7 @@ import { Character } from '@/types/game';
 import { Button, Card } from '@/components/ui';
 import { motion } from 'framer-motion';
 import { gameActions } from '@/store/gameStore';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 interface ResultCardProps {
   character: Character;
@@ -9,6 +10,22 @@ interface ResultCardProps {
 }
 
 export function ResultCard({ character, userName }: ResultCardProps) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  
+  const navigateToStats = () => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('tab', 'stats');
+    router.push(`/?${params.toString()}`);
+  };
+
+  const handlePlayAgain = () => {
+    gameActions.resetGame();
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete('tab'); // Remove the tab parameter to return to game view
+    router.push(`/?${params.toString()}`);
+  };
+  
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.9 }}
@@ -37,10 +54,10 @@ export function ResultCard({ character, userName }: ResultCardProps) {
           )}
           <p className="text-lg mb-6">{character.description}</p>
           <div className="flex justify-center gap-4">
-            <Button onClick={gameActions.resetGame} variant="secondary">
+            <Button onClick={handlePlayAgain} variant="secondary">
               Play Again
             </Button>
-            <Button onClick={() => window.location.href = '/stats'}>
+            <Button onClick={navigateToStats}>
               View Stats
             </Button>
           </div>
