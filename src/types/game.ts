@@ -17,6 +17,7 @@ export interface Answer {
   id: string;
   question_id: string;
   answer_text: string;
+  image_url: string | null;
   created_at: string;
 }
 

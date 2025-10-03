@@ -40,39 +40,34 @@ export function CharacterCircle({ character, count, maxCount }: CharacterCircleP
           stiffness: 200,
           damping: 20
         }}
-        className="rounded-full bg-blue-500 flex items-center justify-center text-white font-bold relative overflow-hidden"
+        className="rounded-full flex items-center justify-center text-white font-bold relative overflow-hidden"
+        style={{
+          backgroundImage: character.image_url ? `url(${character.image_url})` : undefined,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
       >
+        <div className="absolute inset-0 bg-black bg-opacity-40" />
         <motion.div
           initial={{ scale: 0.5, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ delay: 0.2 }}
+          className="relative z-10"
         >
           <motion.span
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             key={animatedCount}
+            className="text-2xl"
           >
             {animatedCount}
           </motion.span>
         </motion.div>
-        <motion.div
-          className="absolute inset-0 bg-white opacity-20"
-          animate={{
-            rotate: 360
-          }}
-          transition={{
-            duration: 8,
-            repeat: Infinity,
-            ease: "linear"
-          }}
-          style={{
-            borderRadius: '40%',
-            width: '150%',
-            height: '150%',
-            marginLeft: '-25%',
-            marginTop: '-25%'
-          }}
-        />
+        {!character.image_url && (
+          <motion.div
+            className="absolute inset-0 bg-gradient-to-br from-blue-500 to-blue-700"
+          />
+        )}
       </motion.div>
       <motion.div
         initial={{ opacity: 0 }}

@@ -1,6 +1,7 @@
 import { Question, Answer } from '@/types/game';
-import { Button, Card } from '@/components/ui';
+import { Card } from '@/components/ui';
 import { motion } from 'framer-motion';
+import { cn } from '@/lib/utils';
 
 interface QuestionCardProps {
   question: Question;
@@ -18,16 +19,26 @@ export function QuestionCard({ question, answers, onAnswer }: QuestionCardProps)
     >
       <Card>
         <h2 className="text-2xl font-bold mb-6">{question.question_text}</h2>
-        <div className="space-y-3">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {answers.map((answer) => (
-            <Button
+            <button
               key={answer.id}
               onClick={() => onAnswer(answer.id)}
-              fullWidth
-              variant="secondary"
+              className={cn(
+                'button-base min-h-[120px] text-lg font-medium',
+                'relative overflow-hidden rounded-xl transition-transform hover:scale-[1.02]'
+              )}
+              style={{
+                backgroundImage: answer.image_url ? `url(${answer.image_url})` : undefined,
+              }}
             >
-              {answer.answer_text}
-            </Button>
+              <div className="relative z-10 p-4 text-white">
+                {answer.answer_text}
+              </div>
+              {!answer.image_url && (
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-500 to-blue-700" />
+              )}
+            </button>
           ))}
         </div>
       </Card>
