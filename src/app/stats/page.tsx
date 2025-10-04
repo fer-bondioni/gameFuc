@@ -32,15 +32,26 @@ export default function StatsPage() {
           schema: 'public',
           table: 'user_responses'
         },
-        () => {
-          console.log('Received database change event');
-          loadStats();
+        (payload) => {
+          console.log('Received database change event:', payload);
+          // Add a small delay to ensure database consistency
+          setTimeout(() => {
+            loadStats();
+          }, 500);
         }
       )
-      .subscribe();
+      .subscribe((status) => {
+        console.log('Subscription status:', status);
+      });
+
+    // Refresh stats periodically as a fallback
+    const intervalId = setInterval(() => {
+      loadStats();
+    }, 10000);
 
     return () => {
       supabase.removeChannel(channel);
+      clearInterval(intervalId);
     };
   }, []);
 
@@ -146,27 +157,42 @@ export default function StatsPage() {
 
   async function loadStats() {
     console.log('Loading stats...');
-    const { data, error } = await supabase
-      .from('characters')
-      .select(`
-        *,
-        count: user_responses(count)
-      `);
+    try {
+      const { data, error } = await supabase
+        .from('characters')
+        .select(`
+          *,
+          count: user_responses(count)
+        `)
+        .order('name');
 
-    if (error) {
-      console.error('Error loading stats:', error);
-      return;
-    }
+      if (error) {
+        console.error('Error loading stats:', error);
+        return;
+      }
 
-    if (data) {
-      console.log('Received stats data:', data);
-      const characterStats = data.map(char => ({
-        ...char,
-        count: char.count[0]?.count || 0
-      }));
-      console.log('Processed stats:', characterStats);
-      setStats(characterStats);
-      setLoading(false);
+      if (data) {
+        console.log('Received stats data:', data);
+        const characterStats = data.map(char => ({
+          ...char,
+          count: char.count[0]?.count || 0
+        }));
+        console.log('Processed stats:', characterStats);
+        
+        // Only update state if data has actually changed
+        setStats(prev => {
+          const hasChanged = JSON.stringify(prev) !== JSON.stringify(characterStats);
+          if (hasChanged) {
+            console.log('Stats have changed, updating state');
+            return characterStats;
+          }
+          return prev;
+        });
+        
+        setLoading(false);
+      }
+    } catch (error) {
+      console.error('Failed to load stats:', error);
     }
   }
 

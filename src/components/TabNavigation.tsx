@@ -1,14 +1,15 @@
 "use client";
 
 interface TabNavigationProps {
-  activeTab: "game" | "stats";
-  onTabChange: (tab: "game" | "stats") => void;
+  activeTab: "game" | "stats" | "dashboard";
+  onTabChange: (tab: "game" | "stats" | "dashboard") => void;
 }
 
 export default function TabNavigation({ activeTab, onTabChange }: TabNavigationProps) {
   const tabs = [
     { name: "Game", value: "game" },
     { name: "Stats", value: "stats" },
+    { name: "Dashboard", value: "dashboard" },
   ];
 
   return (
@@ -19,7 +20,7 @@ export default function TabNavigation({ activeTab, onTabChange }: TabNavigationP
           return (
             <button
               key={tab.name}
-              onClick={() => onTabChange(tab.value as "game" | "stats")}
+              onClick={() => onTabChange(tab.value as "game" | "stats" | "dashboard")}
               className={`
                 whitespace-nowrap border-b-2 py-4 px-1 text-sm font-medium
                 ${

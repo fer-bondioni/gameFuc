@@ -130,12 +130,29 @@ export default function GamePage() {
                     .single();
                   
                   if (character) {
-                    // Store result in database
-                    await supabase.from('user_responses').insert({
-                      user_name: userName,
-                      result_character_id: character.id,
-                      responses: answers
-                    });
+                    try {
+                      // Store result in database
+                      const { data: inserted, error: insertError } = await supabase
+                        .from('user_responses')
+                        .insert({
+                          user_name: userName,
+                          result_character_id: character.id,
+                          responses: answers,
+                          created_at: new Date().toISOString()
+                        })
+                        .select()
+                        .single();
+
+                      if (insertError) {
+                        console.error('Failed to save quiz result:', insertError);
+                      } else {
+                        console.log('Successfully saved quiz result:', inserted);
+                        // Force a stats reload by navigating to the stats page
+                        window.location.href = '/?tab=stats';
+                      }
+                    } catch (error) {
+                      console.error('Error saving quiz result:', error);
+                    }
                     
                     gameActions.setResult(character);
                   }
