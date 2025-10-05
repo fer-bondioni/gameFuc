@@ -33,8 +33,8 @@ export default function LoginForm() {
 
       if (error) throw error;
 
-      // Refresh the page to update the auth state
-      window.location.reload();
+      // Redirect to dashboard
+      window.location.href = "/?tab=dashboard";
     } catch (error: any) {
       setError(error.message);
     } finally {

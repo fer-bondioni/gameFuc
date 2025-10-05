@@ -19,7 +19,7 @@ export default function DashboardPage() {
     try {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) {
-        router.push("/");
+        router.push("/dashboard/login");
         return;
       }
       setIsLoading(false);

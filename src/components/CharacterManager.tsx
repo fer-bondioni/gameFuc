@@ -6,16 +6,26 @@ import { supabase } from "@/lib/supabase";
 interface Character {
   id: string;
   name: string;
-  image_url: string;
+  description: string;
+  image_url: string | null;
 }
+
+interface NewCharacter {
+  name: string;
+  description: string;
+  image_url: string | null;
+}
+
+type CharacterInsert = NewCharacter;
 
 export default function CharacterManager() {
   const [characters, setCharacters] = useState<Character[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [editingCharacter, setEditingCharacter] = useState<Character | null>(null);
-  const [newCharacter, setNewCharacter] = useState({
+  const [newCharacter, setNewCharacter] = useState<NewCharacter>({
     name: "",
-    image_url: "",
+    description: "",
+    image_url: null,
   });
 
   useEffect(() => {
@@ -64,9 +74,27 @@ export default function CharacterManager() {
 
   async function handleCreateCharacter() {
     try {
+      if (!newCharacter.name.trim()) {
+        alert("Please enter a character name");
+        return;
+      }
+
+      // Get the current user's ID
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        alert("Please log in to create characters");
+        return;
+      }
+
+      const characterData: CharacterInsert = {
+        name: newCharacter.name,
+        description: newCharacter.description,
+        image_url: newCharacter.image_url || null
+      };
+      
       const { data, error } = await supabase
         .from("characters")
-        .insert([newCharacter])
+        .insert([characterData])
         .select()
         .single();
 
@@ -75,7 +103,8 @@ export default function CharacterManager() {
       setCharacters([...characters, data]);
       setNewCharacter({
         name: "",
-        image_url: "",
+        description: "",
+        image_url: null,
       });
     } catch (error) {
       console.error("Error creating character:", error);
@@ -132,6 +161,16 @@ export default function CharacterManager() {
               value={newCharacter.name}
               onChange={(e) => setNewCharacter({ ...newCharacter, name: e.target.value })}
               className="w-full p-2 border rounded-lg"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium mb-1">Description</label>
+            <textarea
+              value={newCharacter.description}
+              onChange={(e) => setNewCharacter({ ...newCharacter, description: e.target.value })}
+              className="w-full p-2 border rounded-lg"
+              rows={3}
             />
           </div>
           
@@ -205,11 +244,17 @@ export default function CharacterManager() {
               </div>
             ) : (
               <div>
-                <img
-                  src={character.image_url}
-                  alt={character.name}
-                  className="w-full h-48 object-cover rounded-lg mb-2"
-                />
+                {character.image_url ? (
+                  <img
+                    src={character.image_url}
+                    alt={character.name}
+                    className="w-full h-48 object-cover rounded-lg mb-2"
+                  />
+                ) : (
+                  <div className="w-full h-48 bg-gray-200 dark:bg-gray-700 rounded-lg mb-2 flex items-center justify-center">
+                    No Image
+                  </div>
+                )}
                 <h4 className="font-medium text-lg">{character.name}</h4>
                 <div className="mt-4 flex space-x-2">
                   <button

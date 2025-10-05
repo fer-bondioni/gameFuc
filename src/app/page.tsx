@@ -13,22 +13,35 @@ export default function Home() {
   const [activeTab, setActiveTab] = useState<"game" | "stats" | "dashboard">("game");
   
   useEffect(() => {
-    const tab = searchParams.get("tab") as "game" | "stats" | "dashboard";
-    if (tab && (tab === "game" || tab === "stats" || tab === "dashboard")) {
-      setActiveTab(tab);
+    const tab = searchParams.get("tab") as "game" | "stats" | "dashboard" | null;
+    const validTabs = ["game", "stats", "dashboard"];
+    if (tab && validTabs.includes(tab)) {
+      setActiveTab(tab as "game" | "stats" | "dashboard");
     } else {
-      setActiveTab("game"); // Default to game tab when no tab parameter is present
+      setActiveTab("game");
     }
   }, [searchParams]);
 
   const handleTabChange = (tab: "game" | "stats" | "dashboard") => {
-    const params = new URLSearchParams(searchParams.toString());
-    if (tab === "game") {
-      params.delete("tab");
-    } else {
-      params.set("tab", tab);
+    setActiveTab(tab);
+    const currentParams = new URLSearchParams(searchParams.toString());
+    const newParams = new URLSearchParams();
+    
+    // Preserve all existing params except 'tab'
+    currentParams.forEach((value, key) => {
+      if (key !== 'tab') {
+        newParams.set(key, value);
+      }
+    });
+
+    // Only add tab parameter if it's not the game tab
+    if (tab !== "game") {
+      newParams.set("tab", tab);
     }
-    router.push(`/?${params.toString()}`);
+
+    const queryString = newParams.toString();
+    const url = queryString ? `/?${queryString}` : '/';
+    router.replace(url);
   };
 
   return (

@@ -3,37 +3,92 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 
+interface CharacterPoint {
+  id: string;
+  answer_id: string;
+  character_id: string;
+  points: number;
+}
+
+interface Character {
+  id: string;
+  name: string;
+  description: string;
+  image_url?: string;
+}
+
+interface Answer {
+  id: string;
+  question_id: string;
+  answer_text: string;
+  image_url?: string;
+  created_at: string;
+  character_points?: CharacterPoint[];
+}
+
 interface Question {
   id: string;
-  text: string;
-  image_url?: string;
-  correct_answer: string;
-  wrong_answers: string[];
+  question_text: string;
+  order_number: number;
+  created_at: string;
+  answers?: Answer[];
 }
 
 export default function QuestionManager() {
   const [questions, setQuestions] = useState<Question[]>([]);
+  const [characters, setCharacters] = useState<Character[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [editingQuestion, setEditingQuestion] = useState<Question | null>(null);
   const [newQuestion, setNewQuestion] = useState({
-    text: "",
-    image_url: "",
-    correct_answer: "",
-    wrong_answers: ["", "", ""]
+    question_text: "",
+    order_number: 1,
+    answers: [
+      { answer_text: "", image_url: "" },
+      { answer_text: "", image_url: "" },
+      { answer_text: "", image_url: "" },
+      { answer_text: "", image_url: "" }
+    ]
   });
 
-  // Load questions when component mounts
+  // Load questions and characters when component mounts
   useEffect(() => {
     loadQuestions();
+    loadCharacters();
   }, []);
+
+  async function loadCharacters() {
+    try {
+      const { data, error } = await supabase
+        .from("characters")
+        .select("*")
+        .order("name");
+
+      if (error) throw error;
+      setCharacters(data || []);
+    } catch (error) {
+      console.error("Error loading characters:", error);
+    }
+  }
 
   async function loadQuestions() {
     try {
       setIsLoading(true);
       const { data, error } = await supabase
         .from("questions")
-        .select("*")
-        .order("created_at", { ascending: false });
+        .select(`
+          *,
+          answers (
+            id,
+            answer_text,
+            image_url,
+            character_points (
+              id,
+              character_id,
+              points
+            )
+          )
+        `)
+        .order("order_number", { ascending: true });
 
       if (error) throw error;
       setQuestions(data || []);
@@ -69,39 +124,187 @@ export default function QuestionManager() {
 
   async function handleCreateQuestion() {
     try {
-      const { data, error } = await supabase
+      // First, get the max order number
+      const { data: maxOrderData } = await supabase
         .from("questions")
-        .insert([newQuestion])
+        .select("order_number")
+        .order("order_number", { ascending: false })
+        .limit(1)
+        .single();
+
+      const newOrderNumber = (maxOrderData?.order_number || 0) + 1;
+
+      // Create the question
+      const { data: questionData, error: questionError } = await supabase
+        .from("questions")
+        .insert([{
+          question_text: newQuestion.question_text,
+          order_number: newOrderNumber
+        }])
         .select()
         .single();
 
-      if (error) throw error;
+      if (questionError) throw questionError;
 
-      setQuestions([data, ...questions]);
+      // Create the answers
+      const answersToCreate = newQuestion.answers.map(answer => ({
+        question_id: questionData.id,
+        answer_text: answer.answer_text,
+        image_url: answer.image_url
+      }));
+
+      const { data: answersData, error: answersError } = await supabase
+        .from("answers")
+        .insert(answersToCreate)
+        .select();
+
+      if (answersError) throw answersError;
+
+      setQuestions([{
+        ...questionData,
+        answers: answersData
+      }, ...questions]);
+
       setNewQuestion({
-        text: "",
-        image_url: "",
-        correct_answer: "",
-        wrong_answers: ["", "", ""]
+        question_text: "",
+        order_number: 1,
+        answers: [
+          { answer_text: "", image_url: "" },
+          { answer_text: "", image_url: "" },
+          { answer_text: "", image_url: "" },
+          { answer_text: "", image_url: "" }
+        ]
       });
     } catch (error) {
       console.error("Error creating question:", error);
     }
   }
 
+  async function handleCharacterPointChange(answerId: string, characterId: string, points: number) {
+    try {
+      // Check if a character point record already exists
+      const { data: existingPoints } = await supabase
+        .from('character_points')
+        .select('id')
+        .match({ answer_id: answerId, character_id: characterId })
+        .single();
+
+      if (existingPoints) {
+        // Update existing record
+        const { error } = await supabase
+          .from('character_points')
+          .update({ points })
+          .match({ answer_id: answerId, character_id: characterId });
+
+        if (error) throw error;
+      } else {
+        // Create new record
+        const { error } = await supabase
+          .from('character_points')
+          .insert([{
+            answer_id: answerId,
+            character_id: characterId,
+            points
+          }]);
+
+        if (error) throw error;
+      }
+
+      // Update local state
+      const updatedQuestions = questions.map(q => ({
+        ...q,
+        answers: q.answers?.map(a => {
+          if (a.id === answerId) {
+            const existingPoints = a.character_points || [];
+            const pointIndex = existingPoints.findIndex(cp => cp.character_id === characterId);
+            
+            if (pointIndex >= 0) {
+              existingPoints[pointIndex] = { ...existingPoints[pointIndex], points };
+            } else {
+              existingPoints.push({
+                id: 'temp-' + Math.random(), // Will be replaced on next load
+                answer_id: answerId,
+                character_id: characterId,
+                points
+              });
+            }
+            
+            return { ...a, character_points: existingPoints };
+          }
+          return a;
+        })
+      }));
+      
+      setQuestions(updatedQuestions);
+    } catch (error) {
+      console.error("Error updating character points:", error);
+    }
+  }
+
   async function handleUpdateQuestion(question: Question) {
     try {
-      const { error } = await supabase
+      // Update question text
+      const { error: questionError } = await supabase
         .from("questions")
-        .update(question)
+        .update({
+          question_text: question.question_text
+        })
         .eq("id", question.id);
 
-      if (error) throw error;
+      if (questionError) throw questionError;
 
-      setQuestions(questions.map(q => q.id === question.id ? question : q));
+      // Update answers and character points
+      const updatePromises = question.answers?.map(async answer => {
+        // Update answer
+        await supabase
+          .from("answers")
+          .update({
+            answer_text: answer.answer_text,
+            image_url: answer.image_url
+          })
+          .eq("id", answer.id);
+
+        // Update character points
+        const characterPoints = answer.character_points || [];
+        for (const point of characterPoints) {
+          if (point.id.startsWith('temp-')) {
+            // Create new character point
+            await supabase
+              .from('character_points')
+              .insert([{
+                answer_id: answer.id,
+                character_id: point.character_id,
+                points: point.points
+              }]);
+          } else {
+            // Update existing character point
+            await supabase
+              .from('character_points')
+              .update({ points: point.points })
+              .eq("id", point.id);
+          }
+        }
+      }) || [];
+
+      await Promise.all(updatePromises);
+
+      // Reload questions to get fresh data
+      await loadQuestions();
       setEditingQuestion(null);
     } catch (error) {
       console.error("Error updating question:", error);
+    }
+  }
+
+  async function handleCancelEdit() {
+    if (editingQuestion) {
+      const hasChanges = JSON.stringify(editingQuestion) !== JSON.stringify(
+        questions.find(q => q.id === editingQuestion.id)
+      );
+
+      if (!hasChanges || window.confirm("Are you sure you want to cancel? Any unsaved changes will be lost.")) {
+        setEditingQuestion(null);
+      }
     }
   }
 
@@ -136,55 +339,49 @@ export default function QuestionManager() {
             <label className="block text-sm font-medium mb-1">Question Text</label>
             <input
               type="text"
-              value={newQuestion.text}
-              onChange={(e) => setNewQuestion({ ...newQuestion, text: e.target.value })}
+              value={newQuestion.question_text}
+              onChange={(e) => setNewQuestion({ ...newQuestion, question_text: e.target.value })}
               className="w-full p-2 border rounded-lg"
             />
           </div>
           
           <div>
-            <label className="block text-sm font-medium mb-1">Image</label>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={async (e) => {
-                const file = e.target.files?.[0];
-                if (file) {
-                  const url = await handleImageUpload(file);
-                  if (url) {
-                    setNewQuestion({ ...newQuestion, image_url: url });
-                  }
-                }
-              }}
-              className="w-full p-2 border rounded-lg"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium mb-1">Correct Answer</label>
-            <input
-              type="text"
-              value={newQuestion.correct_answer}
-              onChange={(e) => setNewQuestion({ ...newQuestion, correct_answer: e.target.value })}
-              className="w-full p-2 border rounded-lg"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium mb-1">Wrong Answers</label>
-            {newQuestion.wrong_answers.map((answer, index) => (
-              <input
-                key={index}
-                type="text"
-                value={answer}
-                onChange={(e) => {
-                  const newAnswers = [...newQuestion.wrong_answers];
-                  newAnswers[index] = e.target.value;
-                  setNewQuestion({ ...newQuestion, wrong_answers: newAnswers });
-                }}
-                className="w-full p-2 border rounded-lg mb-2"
-                placeholder={`Wrong answer ${index + 1}`}
-              />
+            <label className="block text-sm font-medium mb-1">Answers</label>
+            {newQuestion.answers.map((answer, index) => (
+              <div key={index} className="mb-4">
+                <div className="mb-2">
+                  <input
+                    type="text"
+                    value={answer.answer_text}
+                    onChange={(e) => {
+                      const newAnswers = [...newQuestion.answers];
+                      newAnswers[index] = { ...answer, answer_text: e.target.value };
+                      setNewQuestion({ ...newQuestion, answers: newAnswers });
+                    }}
+                    className="w-full p-2 border rounded-lg mb-2"
+                    placeholder={`Answer ${index + 1}`}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1">Image (optional)</label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={async (e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        const url = await handleImageUpload(file);
+                        if (url) {
+                          const newAnswers = [...newQuestion.answers];
+                          newAnswers[index] = { ...answer, image_url: url };
+                          setNewQuestion({ ...newQuestion, answers: newAnswers });
+                        }
+                      }
+                    }}
+                    className="w-full p-2 border rounded-lg"
+                  />
+                </div>
+              </div>
             ))}
           </div>
 
@@ -204,61 +401,160 @@ export default function QuestionManager() {
           <div key={question.id} className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
             {editingQuestion?.id === question.id ? (
               <div className="space-y-4">
-                <input
-                  type="text"
-                  value={editingQuestion.text}
-                  onChange={(e) => setEditingQuestion({ ...editingQuestion, text: e.target.value })}
-                  className="w-full p-2 border rounded-lg"
-                />
-                <input
-                  type="text"
-                  value={editingQuestion.correct_answer}
-                  onChange={(e) => setEditingQuestion({ ...editingQuestion, correct_answer: e.target.value })}
-                  className="w-full p-2 border rounded-lg"
-                />
-                {editingQuestion.wrong_answers.map((answer, index) => (
+                <div className="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg">
+                  <label className="block text-sm font-medium mb-1">Question Text</label>
                   <input
-                    key={index}
                     type="text"
-                    value={answer}
-                    onChange={(e) => {
-                      const newAnswers = [...editingQuestion.wrong_answers];
-                      newAnswers[index] = e.target.value;
-                      setEditingQuestion({ ...editingQuestion, wrong_answers: newAnswers });
-                    }}
+                    value={editingQuestion.question_text}
+                    onChange={(e) => setEditingQuestion({ ...editingQuestion, question_text: e.target.value })}
                     className="w-full p-2 border rounded-lg"
                   />
-                ))}
-                <div className="flex space-x-2">
+                </div>
+                <div className="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg">
+                  <h4 className="font-medium mb-3">Answers</h4>
+                  {editingQuestion.answers?.map((answer, index) => (
+                    <div key={answer.id} className="mb-6 p-4 bg-white dark:bg-gray-800 rounded-lg">
+                      <div className="space-y-4">
+                        <div>
+                          <label className="block text-sm font-medium mb-1">Answer Text</label>
+                          <input
+                            type="text"
+                            value={answer.answer_text}
+                            onChange={(e) => {
+                              const newAnswers = [...(editingQuestion.answers || [])];
+                              newAnswers[index] = { ...answer, answer_text: e.target.value };
+                              setEditingQuestion({ ...editingQuestion, answers: newAnswers });
+                            }}
+                            className="w-full p-2 border rounded-lg"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium mb-1">Answer Image</label>
+                          {answer.image_url ? (
+                            <div>
+                              <img src={answer.image_url} alt="Answer" className="mt-2 max-w-xs rounded" />
+                              <button
+                                onClick={() => {
+                                  const newAnswers = [...(editingQuestion.answers || [])];
+                                  newAnswers[index] = { ...answer, image_url: undefined };
+                                  setEditingQuestion({ ...editingQuestion, answers: newAnswers });
+                                }}
+                                className="text-red-600 text-sm mt-1"
+                              >
+                                Remove image
+                              </button>
+                            </div>
+                          ) : (
+                            <input
+                              type="file"
+                              accept="image/*"
+                              onChange={async (e) => {
+                                const file = e.target.files?.[0];
+                                if (file) {
+                                  const url = await handleImageUpload(file);
+                                  if (url) {
+                                    const newAnswers = [...(editingQuestion.answers || [])];
+                                    newAnswers[index] = { ...answer, image_url: url };
+                                    setEditingQuestion({ ...editingQuestion, answers: newAnswers });
+                                  }
+                                }
+                              }}
+                              className="w-full p-2 border rounded-lg"
+                            />
+                          )}
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium mb-2">Character Points</label>
+                          <div className="grid grid-cols-2 gap-4">
+                            {characters.map(character => {
+                              const characterPoint = answer.character_points?.find(
+                                cp => cp.character_id === character.id
+                              );
+                              return (
+                                <div key={character.id} className="flex items-center space-x-2">
+                                  <span className="text-sm">{character.name}:</span>
+                                  <input
+                                    type="number"
+                                    min="0"
+                                    max="100"
+                                    value={characterPoint?.points || 0}
+                                    onChange={(e) => {
+                                      const newPoints = parseInt(e.target.value);
+                                      const newAnswers = [...(editingQuestion.answers || [])];
+                                      const currentPoints = newAnswers[index].character_points || [];
+                                      const pointIndex = currentPoints.findIndex(cp => cp.character_id === character.id);
+                                      
+                                      if (pointIndex >= 0) {
+                                        currentPoints[pointIndex].points = newPoints;
+                                      } else {
+                                        currentPoints.push({
+                                          id: 'temp-' + Math.random(),
+                                          answer_id: answer.id,
+                                          character_id: character.id,
+                                          points: newPoints
+                                        });
+                                      }
+                                      
+                                      newAnswers[index] = { ...answer, character_points: currentPoints };
+                                      setEditingQuestion({ ...editingQuestion, answers: newAnswers });
+                                    }}
+                                    className="w-20 p-1 border rounded"
+                                  />
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className="flex justify-end space-x-2 mt-6">
+                  <button
+                    onClick={handleCancelEdit}
+                    className="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600"
+                  >
+                    Cancel
+                  </button>
                   <button
                     onClick={() => handleUpdateQuestion(editingQuestion)}
                     className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-hover"
                   >
-                    Save
-                  </button>
-                  <button
-                    onClick={() => setEditingQuestion(null)}
-                    className="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600"
-                  >
-                    Cancel
+                    Save Changes
                   </button>
                 </div>
               </div>
             ) : (
               <div>
-                <p className="font-medium">{question.text}</p>
-                {question.image_url && (
-                  <img src={question.image_url} alt="Question" className="mt-2 max-w-xs rounded" />
-                )}
-                <p className="text-green-600 dark:text-green-400 mt-2">
-                  Correct: {question.correct_answer}
-                </p>
-                <div className="mt-2">
-                  <p className="text-sm text-gray-500 dark:text-gray-400">Wrong answers:</p>
-                  <ul className="list-disc list-inside">
-                    {question.wrong_answers.map((answer, index) => (
-                      <li key={index} className="text-red-600 dark:text-red-400">
-                        {answer}
+                <p className="font-medium">{question.question_text}</p>
+                <div className="mt-4">
+                  <p className="text-sm font-medium mb-2">Answers:</p>
+                  <ul className="space-y-2">
+                    {question.answers?.map((answer, index) => (
+                      <li key={answer.id} className="flex items-start space-x-2">
+                        <span>{index + 1}.</span>
+                        <div>
+                          <p>{answer.answer_text}</p>
+                          {answer.image_url && (
+                            <img src={answer.image_url} alt="Answer" className="mt-2 max-w-xs rounded" />
+                          )}
+                          <div className="mt-2">
+                            <p className="text-sm font-medium">Character Points:</p>
+                            <div className="space-y-2 mt-1">
+                              {characters.map(character => {
+                                const characterPoint = answer.character_points?.find(
+                                  cp => cp.character_id === character.id
+                                );
+                                return (
+                                  <div key={character.id} className="flex items-center space-x-2">
+                                    <span className="text-sm">{character.name}:</span>
+                                    <span className="text-sm font-medium">{characterPoint?.points || 0}</span>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        </div>
                       </li>
                     ))}
                   </ul>
