@@ -21,7 +21,7 @@ interface Answer {
   id: string;
   question_id: string;
   answer_text: string;
-  image_url?: string;
+  image_url?: string | null;
   created_at: string;
   character_points?: CharacterPoint[];
 }
@@ -436,7 +436,7 @@ export default function QuestionManager() {
                               <button
                                 onClick={() => {
                                   const newAnswers = [...(editingQuestion.answers || [])];
-                                  newAnswers[index] = { ...answer, image_url: undefined };
+                                  newAnswers[index] = { ...answer, image_url: null };
                                   setEditingQuestion({ ...editingQuestion, answers: newAnswers });
                                 }}
                                 className="text-red-600 text-sm mt-1"
