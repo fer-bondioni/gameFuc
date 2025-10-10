@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { Character } from '@/types/game';
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 
 interface CharacterCircleProps {
   character: Character;
@@ -51,12 +52,17 @@ export function CharacterCircle({ character, count, maxCount }: CharacterCircleP
           damping: 20
         }}
         className="rounded-full flex items-center justify-center text-white font-black relative overflow-hidden shadow-2xl ring-4 ring-white/30"
-        style={{
-          backgroundImage: character.image_url ? `url(${character.image_url})` : undefined,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-        }}
       >
+        {/* Imagen de fondo con object-contain para no cortar */}
+        {character.image_url && (
+          <Image
+            src={character.image_url}
+            alt={character.name}
+            fill
+            className="object-contain"
+            sizes="200px"
+          />
+        )}
         {/* Overlay más claro para que las imágenes se vean mejor */}
         <div className="absolute inset-0 bg-black bg-opacity-30" />
         <motion.div
