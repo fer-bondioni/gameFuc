@@ -3,6 +3,7 @@ import { Button, Card } from '@/components/ui';
 import { motion } from 'framer-motion';
 import { gameActions } from '@/store/gameStore';
 import { useRouter, useSearchParams } from 'next/navigation';
+import Image from 'next/image';
 
 interface ResultCardProps {
   character: Character;
@@ -46,11 +47,14 @@ export function ResultCard({ character, userName }: ResultCardProps) {
             {character.name}
           </h3>
           {character.image_url && (
-            <img
-              src={character.image_url}
-              alt={character.name}
-              className="w-48 h-48 object-cover mx-auto rounded-full mb-4"
-            />
+            <div className="relative w-48 h-48 mx-auto mb-4">
+              <Image
+                src={character.image_url}
+                alt={character.name}
+                fill
+                className="object-cover rounded-full"
+              />
+            </div>
           )}
           <p className="text-lg mb-6">{character.description}</p>
           <div className="flex justify-center gap-4">

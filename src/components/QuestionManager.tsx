@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
+import Image from "next/image";
 
 interface CharacterPoint {
   id: string;
@@ -180,6 +181,7 @@ export default function QuestionManager() {
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async function handleCharacterPointChange(answerId: string, characterId: string, points: number) {
     try {
       // Check if a character point record already exists
@@ -432,7 +434,9 @@ export default function QuestionManager() {
                           <label className="block text-sm font-medium mb-1">Answer Image</label>
                           {answer.image_url ? (
                             <div>
-                              <img src={answer.image_url} alt="Answer" className="mt-2 max-w-xs rounded" />
+                              <div className="relative mt-2 max-w-xs h-48">
+                                <Image src={answer.image_url} alt="Answer" fill className="rounded object-contain" />
+                              </div>
                               <button
                                 onClick={() => {
                                   const newAnswers = [...(editingQuestion.answers || [])];
@@ -536,7 +540,9 @@ export default function QuestionManager() {
                         <div>
                           <p>{answer.answer_text}</p>
                           {answer.image_url && (
-                            <img src={answer.image_url} alt="Answer" className="mt-2 max-w-xs rounded" />
+                            <div className="relative mt-2 max-w-xs h-48">
+                              <Image src={answer.image_url} alt="Answer" fill className="rounded object-contain" />
+                            </div>
                           )}
                           <div className="mt-2">
                             <p className="text-sm font-medium">Character Points:</p>

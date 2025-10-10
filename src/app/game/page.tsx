@@ -5,7 +5,7 @@ import { useGameStore, gameActions } from '@/store/gameStore';
 import { NameInput } from '@/components/NameInput';
 import { QuestionCard } from '@/components/QuestionCard';
 import { ResultCard } from '@/components/ResultCard';
-import { Question, Answer, Character } from '@/types/game';
+import { Question, Answer } from '@/types/game';
 import { supabase } from '@/lib/supabase';
 import { motion, AnimatePresence } from 'framer-motion';
 

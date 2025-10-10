@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Button, Card, Input } from '@/components/ui';
-import { useGameStore, gameActions } from '@/store/gameStore';
+import { gameActions } from '@/store/gameStore';
 import { motion } from 'framer-motion';
 
 export function NameInput() {

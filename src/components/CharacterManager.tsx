@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
+import Image from "next/image";
 
 interface Character {
   id: string;
@@ -245,11 +246,14 @@ export default function CharacterManager() {
             ) : (
               <div>
                 {character.image_url ? (
-                  <img
-                    src={character.image_url}
-                    alt={character.name}
-                    className="w-full h-48 object-cover rounded-lg mb-2"
-                  />
+                  <div className="relative w-full h-48 mb-2">
+                    <Image
+                      src={character.image_url}
+                      alt={character.name}
+                      fill
+                      className="object-cover rounded-lg"
+                    />
+                  </div>
                 ) : (
                   <div className="w-full h-48 bg-gray-200 dark:bg-gray-700 rounded-lg mb-2 flex items-center justify-center">
                     No Image

@@ -1,13 +1,13 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import TabNavigation from "@/components/TabNavigation";
 import GamePage from "./game/page";
 import StatsPage from "./stats/page";
 import DashboardPage from "./dashboard/page";
 import { useSearchParams, useRouter } from "next/navigation";
 
-export default function Home() {
+function HomeContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<"game" | "stats" | "dashboard">("game");
@@ -57,5 +57,13 @@ export default function Home() {
         )}
       </main>
     </div>
+  );
+}
+
+export default function Home() {
+  return (
+    <Suspense fallback={<div className="font-sans min-h-screen p-8 pb-20 sm:p-20">Loading...</div>}>
+      <HomeContent />
+    </Suspense>
   );
 }

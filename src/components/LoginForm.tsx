@@ -35,8 +35,8 @@ export default function LoginForm() {
 
       // Redirect to dashboard
       window.location.href = "/?tab=dashboard";
-    } catch (error: any) {
-      setError(error.message);
+    } catch (error) {
+      setError(error instanceof Error ? error.message : 'An error occurred');
     } finally {
       setLoading(false);
     }
