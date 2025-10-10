@@ -208,26 +208,51 @@ export default function CharacterManager() {
           <div key={character.id} className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
             {editingCharacter?.id === character.id ? (
               <div className="space-y-4">
-                <input
-                  type="text"
-                  value={editingCharacter.name}
-                  onChange={(e) => setEditingCharacter({ ...editingCharacter, name: e.target.value })}
-                  className="w-full p-3 border-2 border-gray-300 rounded-lg text-gray-900 bg-white font-medium focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
-                />
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={async (e) => {
-                    const file = e.target.files?.[0];
-                    if (file) {
-                      const url = await handleImageUpload(file);
-                      if (url) {
-                        setEditingCharacter({ ...editingCharacter, image_url: url });
+                <div>
+                  <label className="block text-sm font-medium mb-1 text-gray-900 dark:text-white">Nombre del Personaje</label>
+                  <input
+                    type="text"
+                    value={editingCharacter.name}
+                    onChange={(e) => setEditingCharacter({ ...editingCharacter, name: e.target.value })}
+                    className="w-full p-3 border-2 border-gray-300 rounded-lg text-gray-900 bg-white font-medium focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1 text-gray-900 dark:text-white">Descripción</label>
+                  <textarea
+                    value={editingCharacter.description}
+                    onChange={(e) => setEditingCharacter({ ...editingCharacter, description: e.target.value })}
+                    className="w-full p-3 border-2 border-gray-300 rounded-lg text-gray-900 bg-white font-medium focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                    rows={3}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-1 text-gray-900 dark:text-white">Imagen del Personaje</label>
+                  {editingCharacter.image_url && (
+                    <div className="relative w-full h-48 mb-2">
+                      <Image
+                        src={editingCharacter.image_url}
+                        alt={editingCharacter.name}
+                        fill
+                        className="object-cover rounded-lg"
+                      />
+                    </div>
+                  )}
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={async (e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        const url = await handleImageUpload(file);
+                        if (url) {
+                          setEditingCharacter({ ...editingCharacter, image_url: url });
+                        }
                       }
-                    }
-                  }}
-                  className="w-full p-2 border-2 border-gray-300 rounded-lg text-gray-900 bg-white font-medium focus:outline-none focus:ring-2 focus:ring-purple-500"
-                />
+                    }}
+                    className="w-full p-2 border-2 border-gray-300 rounded-lg text-gray-900 bg-white font-medium focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  />
+                </div>
                 <div className="flex space-x-2">
                   <button
                     onClick={() => handleUpdateCharacter(editingCharacter)}
@@ -260,6 +285,9 @@ export default function CharacterManager() {
                   </div>
                 )}
                 <h4 className="font-medium text-lg text-gray-900 dark:text-white">{character.name}</h4>
+                {character.description && (
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">{character.description}</p>
+                )}
                 <div className="mt-4 flex space-x-2">
                   <button
                     onClick={() => setEditingCharacter(character)}
