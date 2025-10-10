@@ -76,14 +76,14 @@ export default function CharacterManager() {
   async function handleCreateCharacter() {
     try {
       if (!newCharacter.name.trim()) {
-        alert("Please enter a character name");
+        alert("Por favor ingresá un nombre para el personaje");
         return;
       }
 
       // Get the current user's ID
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
-        alert("Please log in to create characters");
+        alert("Por favor iniciá sesión para crear personajes");
         return;
       }
 
@@ -129,7 +129,7 @@ export default function CharacterManager() {
   }
 
   async function handleDeleteCharacter(id: string) {
-    if (!window.confirm("Are you sure you want to delete this character?")) return;
+    if (!window.confirm("¿Estás seguro que querés eliminar este personaje?")) return;
 
     try {
       const { error } = await supabase
@@ -146,17 +146,17 @@ export default function CharacterManager() {
   }
 
   if (isLoading) {
-    return <div>Loading characters...</div>;
+    return <div className="text-center p-8"><p className="text-xl font-bold text-gray-900">Cargando personajes...</p></div>;
   }
 
   return (
     <div className="space-y-8">
       {/* Create new character form */}
       <div className="bg-gray-50 dark:bg-gray-900 p-6 rounded-lg">
-        <h3 className="text-xl font-semibold mb-4">Create New Character</h3>
+        <h3 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">Crear Nuevo Personaje</h3>
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium mb-1">Character Name</label>
+            <label className="block text-sm font-medium mb-1 text-gray-900 dark:text-white">Nombre del Personaje</label>
             <input
               type="text"
               value={newCharacter.name}
@@ -166,7 +166,7 @@ export default function CharacterManager() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1">Description</label>
+            <label className="block text-sm font-medium mb-1 text-gray-900 dark:text-white">Descripción</label>
             <textarea
               value={newCharacter.description}
               onChange={(e) => setNewCharacter({ ...newCharacter, description: e.target.value })}
@@ -176,7 +176,7 @@ export default function CharacterManager() {
           </div>
           
           <div>
-            <label className="block text-sm font-medium mb-1">Character Image</label>
+            <label className="block text-sm font-medium mb-1 text-gray-900 dark:text-white">Imagen del Personaje</label>
             <input
               type="file"
               accept="image/*"
@@ -195,9 +195,9 @@ export default function CharacterManager() {
 
           <button
             onClick={handleCreateCharacter}
-            className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-hover"
+            className="bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 text-white px-6 py-3 rounded-2xl font-bold hover:shadow-xl hover:shadow-pink-500/50 transition-all duration-300 transform hover:scale-105"
           >
-            Create Character
+            Crear Personaje
           </button>
         </div>
       </div>
@@ -231,15 +231,15 @@ export default function CharacterManager() {
                 <div className="flex space-x-2">
                   <button
                     onClick={() => handleUpdateCharacter(editingCharacter)}
-                    className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-hover"
+                    className="bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 text-white font-bold py-2 px-6 rounded-2xl hover:shadow-xl hover:shadow-pink-500/50 transition-all duration-300 transform hover:scale-105"
                   >
-                    Save
+                    Guardar
                   </button>
                   <button
                     onClick={() => setEditingCharacter(null)}
-                    className="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600"
+                    className="bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white font-bold py-2 px-6 rounded-2xl transition-all duration-300 shadow-lg transform hover:scale-105"
                   >
-                    Cancel
+                    Cancelar
                   </button>
                 </div>
               </div>
@@ -255,23 +255,23 @@ export default function CharacterManager() {
                     />
                   </div>
                 ) : (
-                  <div className="w-full h-48 bg-gray-200 dark:bg-gray-700 rounded-lg mb-2 flex items-center justify-center">
-                    No Image
+                  <div className="w-full h-48 bg-gray-200 dark:bg-gray-700 rounded-lg mb-2 flex items-center justify-center text-gray-500 dark:text-gray-400 font-bold">
+                    Sin Imagen
                   </div>
                 )}
-                <h4 className="font-medium text-lg">{character.name}</h4>
+                <h4 className="font-medium text-lg text-gray-900 dark:text-white">{character.name}</h4>
                 <div className="mt-4 flex space-x-2">
                   <button
                     onClick={() => setEditingCharacter(character)}
-                    className="text-blue-600 hover:text-blue-800"
+                    className="text-blue-600 hover:text-blue-800 font-bold"
                   >
-                    Edit
+                    ✏️ Editar
                   </button>
                   <button
                     onClick={() => handleDeleteCharacter(character.id)}
-                    className="text-red-600 hover:text-red-800"
+                    className="text-red-600 hover:text-red-800 font-bold"
                   >
-                    Delete
+                    🗑️ Eliminar
                   </button>
                 </div>
               </div>

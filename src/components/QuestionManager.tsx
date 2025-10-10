@@ -304,14 +304,14 @@ export default function QuestionManager() {
         questions.find(q => q.id === editingQuestion.id)
       );
 
-      if (!hasChanges || window.confirm("Are you sure you want to cancel? Any unsaved changes will be lost.")) {
+      if (!hasChanges || window.confirm("¿Estás seguro que querés cancelar? Se perderán los cambios sin guardar.")) {
         setEditingQuestion(null);
       }
     }
   }
 
   async function handleDeleteQuestion(id: string) {
-    if (!window.confirm("Are you sure you want to delete this question?")) return;
+    if (!window.confirm("¿Estás seguro que querés eliminar esta pregunta?")) return;
 
     try {
       const { error } = await supabase
@@ -328,17 +328,17 @@ export default function QuestionManager() {
   }
 
   if (isLoading) {
-    return <div>Loading questions...</div>;
+    return <div className="text-center p-8"><p className="text-xl font-bold text-gray-900">Cargando preguntas...</p></div>;
   }
 
   return (
     <div className="space-y-8">
       {/* Create new question form */}
       <div className="bg-gray-50 dark:bg-gray-900 p-6 rounded-lg">
-        <h3 className="text-xl font-semibold mb-4">Create New Question</h3>
+        <h3 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">Crear Nueva Pregunta</h3>
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium mb-1">Question Text</label>
+            <label className="block text-sm font-medium mb-1 text-gray-900 dark:text-white">Texto de la Pregunta</label>
             <input
               type="text"
               value={newQuestion.question_text}
@@ -348,7 +348,7 @@ export default function QuestionManager() {
           </div>
           
           <div>
-            <label className="block text-sm font-medium mb-1">Answers</label>
+            <label className="block text-sm font-medium mb-1 text-gray-900 dark:text-white">Respuestas</label>
             {newQuestion.answers.map((answer, index) => (
               <div key={index} className="mb-4">
                 <div className="mb-2">
@@ -361,11 +361,11 @@ export default function QuestionManager() {
                       setNewQuestion({ ...newQuestion, answers: newAnswers });
                     }}
                     className="w-full p-2 border rounded-lg mb-2 text-black dark:text-white"
-                    placeholder={`Answer ${index + 1}`}
+                    placeholder={`Respuesta ${index + 1}`}
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">Image (optional)</label>
+                  <label className="block text-sm font-medium mb-1 text-gray-900 dark:text-white">Imagen (opcional)</label>
                   <input
                     type="file"
                     accept="image/*"
@@ -389,22 +389,22 @@ export default function QuestionManager() {
 
           <button
             onClick={handleCreateQuestion}
-            className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-hover"
+            className="bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 text-white px-6 py-3 rounded-2xl font-bold hover:shadow-xl hover:shadow-pink-500/50 transition-all duration-300 transform hover:scale-105"
           >
-            Create Question
+            Crear Pregunta
           </button>
         </div>
       </div>
 
       {/* List of existing questions */}
       <div className="space-y-4">
-        <h3 className="text-xl font-semibold">Existing Questions</h3>
+        <h3 className="text-xl font-semibold text-gray-900 dark:text-white">Preguntas Existentes</h3>
         {questions.map((question) => (
           <div key={question.id} className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
             {editingQuestion?.id === question.id ? (
               <div className="space-y-4">
                 <div className="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg">
-                  <label className="block text-sm font-medium mb-1">Question Text</label>
+                  <label className="block text-sm font-medium mb-1 text-gray-900 dark:text-white">Texto de la Pregunta</label>
                   <input
                     type="text"
                     value={editingQuestion.question_text}
@@ -413,12 +413,12 @@ export default function QuestionManager() {
                   />
                 </div>
                 <div className="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg">
-                  <h4 className="font-medium mb-3">Answers</h4>
+                  <h4 className="font-medium mb-3 text-gray-900 dark:text-white">Respuestas</h4>
                   {editingQuestion.answers?.map((answer, index) => (
                     <div key={answer.id} className="mb-6 p-4 bg-white dark:bg-gray-800 rounded-lg">
                       <div className="space-y-4">
                         <div>
-                          <label className="block text-sm font-medium mb-1">Answer Text</label>
+                          <label className="block text-sm font-medium mb-1 text-gray-900 dark:text-white">Texto de la Respuesta</label>
                           <input
                             type="text"
                             value={answer.answer_text}
@@ -431,7 +431,7 @@ export default function QuestionManager() {
                           />
                         </div>
                         <div>
-                          <label className="block text-sm font-medium mb-1">Answer Image</label>
+                          <label className="block text-sm font-medium mb-1 text-gray-900 dark:text-white">Imagen de la Respuesta</label>
                           {answer.image_url ? (
                             <div>
                               <div className="relative mt-2 max-w-xs h-48">
@@ -443,9 +443,9 @@ export default function QuestionManager() {
                                   newAnswers[index] = { ...answer, image_url: null };
                                   setEditingQuestion({ ...editingQuestion, answers: newAnswers });
                                 }}
-                                className="text-red-600 text-sm mt-1"
+                                className="text-red-600 hover:text-red-800 text-sm mt-1 font-bold"
                               >
-                                Remove image
+                                Eliminar imagen
                               </button>
                             </div>
                           ) : (
@@ -468,7 +468,7 @@ export default function QuestionManager() {
                           )}
                         </div>
                         <div>
-                          <label className="block text-sm font-medium mb-2">Character Points</label>
+                          <label className="block text-sm font-medium mb-2 text-gray-900 dark:text-white">Puntos de Personaje</label>
                           <div className="grid grid-cols-2 gap-4">
                             {characters.map(character => {
                               const characterPoint = answer.character_points?.find(
@@ -516,15 +516,15 @@ export default function QuestionManager() {
                 <div className="flex justify-end space-x-2 mt-6">
                   <button
                     onClick={handleCancelEdit}
-                    className="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600"
+                    className="bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white font-bold py-2 px-6 rounded-2xl transition-all duration-300 shadow-lg transform hover:scale-105"
                   >
-                    Cancel
+                    Cancelar
                   </button>
                   <button
                     onClick={() => handleUpdateQuestion(editingQuestion)}
-                    className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-hover"
+                    className="bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 text-white font-bold py-2 px-6 rounded-2xl hover:shadow-xl hover:shadow-pink-500/50 transition-all duration-300 transform hover:scale-105"
                   >
-                    Save Changes
+                    Guardar Cambios
                   </button>
                 </div>
               </div>
@@ -532,7 +532,7 @@ export default function QuestionManager() {
               <div>
                 <p className="font-medium">{question.question_text}</p>
                 <div className="mt-4">
-                  <p className="text-sm font-medium mb-2">Answers:</p>
+                  <p className="text-sm font-medium mb-2 text-gray-900 dark:text-white">Respuestas:</p>
                   <ul className="space-y-2">
                     {question.answers?.map((answer, index) => (
                       <li key={answer.id} className="flex items-start space-x-2">
@@ -545,7 +545,7 @@ export default function QuestionManager() {
                             </div>
                           )}
                           <div className="mt-2">
-                            <p className="text-sm font-medium">Character Points:</p>
+                            <p className="text-sm font-medium text-gray-900 dark:text-white">Puntos de Personaje:</p>
                             <div className="space-y-2 mt-1">
                               {characters.map(character => {
                                 const characterPoint = answer.character_points?.find(
@@ -568,15 +568,15 @@ export default function QuestionManager() {
                 <div className="mt-4 flex space-x-2">
                   <button
                     onClick={() => setEditingQuestion(question)}
-                    className="text-blue-600 hover:text-blue-800"
+                    className="text-blue-600 hover:text-blue-800 font-bold"
                   >
-                    Edit
+                    ✏️ Editar
                   </button>
                   <button
                     onClick={() => handleDeleteQuestion(question.id)}
-                    className="text-red-600 hover:text-red-800"
+                    className="text-red-600 hover:text-red-800 font-bold"
                   >
-                    Delete
+                    🗑️ Eliminar
                   </button>
                 </div>
               </div>
