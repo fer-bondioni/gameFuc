@@ -8,7 +8,7 @@ interface CharacterCircleProps {
   maxCount: number;
 }
 
-const MIN_SIZE = 60;
+const MIN_SIZE = 120; // Tamaño mínimo aumentado para mejor visibilidad
 const MAX_SIZE = 200;
 
 export function CharacterCircle({ character, count, maxCount }: CharacterCircleProps) {
@@ -18,8 +18,10 @@ export function CharacterCircle({ character, count, maxCount }: CharacterCircleP
   useEffect(() => {
     // Animate the count up from previous value
     setAnimatedCount(count);
-    // Calculate and animate the new size
-    const newSize = Math.max(MIN_SIZE, (count / Math.max(maxCount, 1)) * MAX_SIZE);
+    // Calculate and animate the new size - si count es 0, usar MIN_SIZE
+    const newSize = count === 0 
+      ? MIN_SIZE 
+      : Math.max(MIN_SIZE, (count / Math.max(maxCount, 1)) * MAX_SIZE);
     setAnimatedSize(newSize);
   }, [count, maxCount]);
   
@@ -55,7 +57,8 @@ export function CharacterCircle({ character, count, maxCount }: CharacterCircleP
           backgroundPosition: 'center',
         }}
       >
-        <div className="absolute inset-0 bg-black bg-opacity-50" />
+        {/* Overlay más claro para que las imágenes se vean mejor */}
+        <div className="absolute inset-0 bg-black bg-opacity-30" />
         <motion.div
           initial={{ scale: 0.5, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
