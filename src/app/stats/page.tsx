@@ -199,20 +199,20 @@ export default function StatsPage() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500" />
+        <div className="animate-spin rounded-full h-32 w-32 border-b-4 border-pink-500" />
       </div>
     );
   }
 
   return (
-    <main className="min-h-screen p-4 bg-gray-50">
-      <div className="max-w-4xl mx-auto">
+    <main className="min-h-screen p-4">
+      <div className="max-w-6xl mx-auto">
         <motion.h1 
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-3xl font-bold text-center mb-12"
+          className="text-5xl md:text-6xl font-extrabold text-center mb-12 bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 bg-clip-text text-transparent drop-shadow-2xl"
         >
-          Personality Quiz Results
+          📊 Resultados del Quiz
         </motion.h1>
         
         <motion.div 
@@ -230,14 +230,19 @@ export default function StatsPage() {
           ))}
         </motion.div>
         
-        <motion.p 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.5 }}
-          className="text-center mt-12 text-gray-600"
+          className="text-center mt-12 bg-white/90 backdrop-blur-md p-6 rounded-3xl shadow-2xl border-4 border-white/20 max-w-md mx-auto"
         >
-          Total Players: {stats.reduce((sum, char) => sum + char.count, 0)}
-        </motion.p>
+          <p className="text-3xl font-extrabold bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 bg-clip-text text-transparent">
+            Total de Jugadores
+          </p>
+          <p className="text-6xl font-black text-gray-900 mt-2">
+            {stats.reduce((sum, char) => sum + char.count, 0)}
+          </p>
+        </motion.div>
 
         <motion.div
           initial={{ opacity: 0 }}
@@ -252,10 +257,10 @@ export default function StatsPage() {
                   type="password"
                   value={adminToken}
                   onChange={(e) => setAdminToken(e.target.value)}
-                  placeholder="Enter admin token"
+                  placeholder="Ingresá el token de admin"
                   disabled={resetting}
-                  className={`px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                    resetting ? 'bg-gray-100' : ''
+                  className={`px-6 py-3 border-4 border-purple-300 rounded-2xl focus:outline-none focus:ring-4 focus:ring-pink-500 text-gray-900 font-bold text-lg shadow-xl ${
+                    resetting ? 'bg-gray-100' : 'bg-white/90'
                   }`}
                   data-testid="admin-token-input"
                 />
@@ -271,18 +276,18 @@ export default function StatsPage() {
                   disabled={resetting || !adminToken}
                   className={`${
                     resetting || !adminToken
-                      ? 'bg-gray-400 cursor-not-allowed'
-                      : 'bg-red-500 hover:bg-red-600'
-                  } text-white font-bold py-2 px-4 rounded-lg transition-colors duration-200 flex items-center gap-2`}
+                      ? 'bg-gray-400 cursor-not-allowed grayscale'
+                      : 'bg-gradient-to-r from-red-500 to-red-700 hover:from-red-600 hover:to-red-800 shadow-xl hover:shadow-red-500/50'
+                  } text-white font-extrabold py-3 px-6 rounded-2xl transition-all duration-300 flex items-center gap-2 transform hover:scale-105`}
                   data-testid="confirm-reset-button"
                 >
                   {resetting ? (
                     <>
                       <div className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full"></div>
-                      Resetting...
+                      Reiniciando...
                     </>
                   ) : (
-                    'Confirm Reset'
+                    '✅ Confirmar Reset'
                   )}
                 </button>
                 <button
@@ -290,19 +295,19 @@ export default function StatsPage() {
                     setShowAdminInput(false);
                     setAdminToken("");
                   }}
-                  className="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-200"
+                  className="bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white font-extrabold py-3 px-6 rounded-2xl transition-all duration-300 shadow-xl transform hover:scale-105"
                   data-testid="cancel-reset-button"
                 >
-                  Cancel
+                  ❌ Cancelar
                 </button>
               </div>
             </div>
           ) : (
             <button
               onClick={() => setShowAdminInput(true)}
-              className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-200"
+              className="bg-gradient-to-r from-red-500 to-red-700 hover:from-red-600 hover:to-red-800 text-white font-extrabold py-3 px-8 rounded-2xl transition-all duration-300 shadow-xl hover:shadow-red-500/50 transform hover:scale-110"
             >
-              Reset All Stats
+              🔄 Reiniciar Todas las Estadísticas
             </button>
           )}
         </motion.div>
