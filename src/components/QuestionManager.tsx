@@ -529,55 +529,68 @@ export default function QuestionManager() {
                 </div>
               </div>
             ) : (
-              <div>
-                <p className="font-medium">{question.question_text}</p>
-                <div className="mt-4">
-                  <p className="text-sm font-medium mb-2 text-gray-900 dark:text-white">Respuestas:</p>
-                  <ul className="space-y-2">
-                    {question.answers?.map((answer, index) => (
-                      <li key={answer.id} className="flex items-start space-x-2">
-                        <span>{index + 1}.</span>
-                        <div>
-                          <p>{answer.answer_text}</p>
+              <div className="space-y-4">
+                {/* Question Header */}
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex-1">
+                    <h4 className="text-lg font-bold text-gray-900 dark:text-white mb-2">{question.question_text}</h4>
+                    <span className="text-xs font-medium text-gray-500 dark:text-gray-400">Pregunta #{question.order_number}</span>
+                  </div>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => setEditingQuestion(question)}
+                      className="px-4 py-2 bg-blue-100 hover:bg-blue-200 text-blue-700 font-bold rounded-xl transition-colors flex items-center gap-1"
+                    >
+                      ✏️ Editar
+                    </button>
+                    <button
+                      onClick={() => handleDeleteQuestion(question.id)}
+                      className="px-4 py-2 bg-red-100 hover:bg-red-200 text-red-700 font-bold rounded-xl transition-colors flex items-center gap-1"
+                    >
+                      🗑️ Eliminar
+                    </button>
+                  </div>
+                </div>
+
+                {/* Answers Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {question.answers?.map((answer, index) => (
+                    <div key={answer.id} className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800 p-4 rounded-xl border-2 border-gray-200 dark:border-gray-600">
+                      <div className="flex items-start gap-3">
+                        <span className="flex-shrink-0 w-7 h-7 bg-gradient-to-br from-pink-500 to-purple-600 text-white rounded-full flex items-center justify-center font-bold text-sm">
+                          {index + 1}
+                        </span>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-bold text-gray-900 dark:text-white mb-2 break-words">{answer.answer_text}</p>
+                          
                           {answer.image_url && (
-                            <div className="relative mt-2 max-w-xs h-48">
-                              <Image src={answer.image_url} alt="Answer" fill className="rounded object-contain" />
+                            <div className="relative w-full h-32 mb-2 rounded-lg overflow-hidden">
+                              <Image src={answer.image_url} alt="Answer" fill className="object-cover" />
                             </div>
                           )}
-                          <div className="mt-2">
-                            <p className="text-sm font-medium text-gray-900 dark:text-white">Puntos de Personaje:</p>
-                            <div className="space-y-2 mt-1">
-                              {characters.map(character => {
-                                const characterPoint = answer.character_points?.find(
-                                  cp => cp.character_id === character.id
-                                );
-                                return (
-                                  <div key={character.id} className="flex items-center space-x-2">
-                                    <span className="text-sm">{character.name}:</span>
-                                    <span className="text-sm font-medium">{characterPoint?.points || 0}</span>
-                                  </div>
-                                );
-                              })}
-                            </div>
+                          
+                          {/* Character Points - Compact */}
+                          <div className="flex flex-wrap gap-2 mt-2">
+                            {characters.map(character => {
+                              const characterPoint = answer.character_points?.find(
+                                cp => cp.character_id === character.id
+                              );
+                              const points = characterPoint?.points || 0;
+                              if (points === 0) return null;
+                              return (
+                                <span
+                                  key={character.id}
+                                  className="inline-flex items-center gap-1 px-2 py-1 bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300 rounded-full text-xs font-bold"
+                                >
+                                  {character.name}: {points}
+                                </span>
+                              );
+                            })}
                           </div>
                         </div>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                <div className="mt-4 flex space-x-2">
-                  <button
-                    onClick={() => setEditingQuestion(question)}
-                    className="text-blue-600 hover:text-blue-800 font-bold"
-                  >
-                    ✏️ Editar
-                  </button>
-                  <button
-                    onClick={() => handleDeleteQuestion(question.id)}
-                    className="text-red-600 hover:text-red-800 font-bold"
-                  >
-                    🗑️ Eliminar
-                  </button>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             )}
