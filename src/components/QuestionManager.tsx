@@ -343,7 +343,7 @@ export default function QuestionManager() {
               type="text"
               value={newQuestion.question_text}
               onChange={(e) => setNewQuestion({ ...newQuestion, question_text: e.target.value })}
-              className="w-full p-2 border rounded-lg text-black dark:text-white"
+              className="w-full p-3 border-2 border-gray-300 rounded-lg text-gray-900 bg-white font-medium focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
             />
           </div>
           
@@ -360,7 +360,7 @@ export default function QuestionManager() {
                       newAnswers[index] = { ...answer, answer_text: e.target.value };
                       setNewQuestion({ ...newQuestion, answers: newAnswers });
                     }}
-                    className="w-full p-2 border rounded-lg mb-2 text-black dark:text-white"
+                    className="w-full p-3 border-2 border-gray-300 rounded-lg mb-2 text-gray-900 bg-white font-medium focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
                     placeholder={`Respuesta ${index + 1}`}
                   />
                 </div>
@@ -380,7 +380,7 @@ export default function QuestionManager() {
                         }
                       }
                     }}
-                    className="w-full p-2 border rounded-lg text-black dark:text-white"
+                    className="w-full p-2 border-2 border-gray-300 rounded-lg text-gray-900 bg-white font-medium focus:outline-none focus:ring-2 focus:ring-purple-500"
                   />
                 </div>
               </div>
@@ -409,7 +409,7 @@ export default function QuestionManager() {
                     type="text"
                     value={editingQuestion.question_text}
                     onChange={(e) => setEditingQuestion({ ...editingQuestion, question_text: e.target.value })}
-                    className="w-full p-2 border rounded-lg text-black dark:text-white"
+                    className="w-full p-3 border-2 border-gray-300 rounded-lg text-gray-900 bg-white font-medium focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
                   />
                 </div>
                 <div className="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg">
@@ -427,7 +427,7 @@ export default function QuestionManager() {
                               newAnswers[index] = { ...answer, answer_text: e.target.value };
                               setEditingQuestion({ ...editingQuestion, answers: newAnswers });
                             }}
-                            className="w-full p-2 border rounded-lg text-black dark:text-white"
+                            className="w-full p-3 border-2 border-gray-300 rounded-lg text-gray-900 bg-white font-medium focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
                           />
                         </div>
                         <div>
@@ -463,7 +463,7 @@ export default function QuestionManager() {
                                   }
                                 }
                               }}
-                              className="w-full p-2 border rounded-lg text-black dark:text-white"
+                              className="w-full p-2 border-2 border-gray-300 rounded-lg text-gray-900 bg-white font-medium focus:outline-none focus:ring-2 focus:ring-purple-500"
                             />
                           )}
                         </div>
@@ -502,7 +502,7 @@ export default function QuestionManager() {
                                       newAnswers[index] = { ...answer, character_points: currentPoints };
                                       setEditingQuestion({ ...editingQuestion, answers: newAnswers });
                                     }}
-                                    className="w-20 p-1 border rounded text-black dark:text-white"
+                                    className="w-20 p-2 border-2 border-gray-300 rounded-lg text-gray-900 bg-white font-bold focus:outline-none focus:ring-2 focus:ring-purple-500"
                                   />
                                 </div>
                               );

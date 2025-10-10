@@ -161,7 +161,7 @@ export default function CharacterManager() {
               type="text"
               value={newCharacter.name}
               onChange={(e) => setNewCharacter({ ...newCharacter, name: e.target.value })}
-              className="w-full p-2 border rounded-lg"
+              className="w-full p-3 border-2 border-gray-300 rounded-lg text-gray-900 bg-white font-medium focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
             />
           </div>
 
@@ -170,7 +170,7 @@ export default function CharacterManager() {
             <textarea
               value={newCharacter.description}
               onChange={(e) => setNewCharacter({ ...newCharacter, description: e.target.value })}
-              className="w-full p-2 border rounded-lg"
+              className="w-full p-3 border-2 border-gray-300 rounded-lg text-gray-900 bg-white font-medium focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
               rows={3}
             />
           </div>
@@ -189,7 +189,7 @@ export default function CharacterManager() {
                   }
                 }
               }}
-              className="w-full p-2 border rounded-lg"
+              className="w-full p-2 border-2 border-gray-300 rounded-lg text-gray-900 bg-white font-medium focus:outline-none focus:ring-2 focus:ring-purple-500"
             />
           </div>
 
@@ -212,7 +212,7 @@ export default function CharacterManager() {
                   type="text"
                   value={editingCharacter.name}
                   onChange={(e) => setEditingCharacter({ ...editingCharacter, name: e.target.value })}
-                  className="w-full p-2 border rounded-lg"
+                  className="w-full p-3 border-2 border-gray-300 rounded-lg text-gray-900 bg-white font-medium focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
                 />
                 <input
                   type="file"
@@ -226,7 +226,7 @@ export default function CharacterManager() {
                       }
                     }
                   }}
-                  className="w-full p-2 border rounded-lg"
+                  className="w-full p-2 border-2 border-gray-300 rounded-lg text-gray-900 bg-white font-medium focus:outline-none focus:ring-2 focus:ring-purple-500"
                 />
                 <div className="flex space-x-2">
                   <button
