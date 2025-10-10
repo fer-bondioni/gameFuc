@@ -147,8 +147,6 @@ export default function GamePage() {
                         console.error('Failed to save quiz result:', insertError);
                       } else {
                         console.log('Successfully saved quiz result:', inserted);
-                        // Force a stats reload by navigating to the stats page
-                        window.location.href = '/?tab=stats';
                       }
                     } catch (error) {
                       console.error('Error saving quiz result:', error);

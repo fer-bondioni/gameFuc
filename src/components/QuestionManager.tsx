@@ -341,7 +341,7 @@ export default function QuestionManager() {
               type="text"
               value={newQuestion.question_text}
               onChange={(e) => setNewQuestion({ ...newQuestion, question_text: e.target.value })}
-              className="w-full p-2 border rounded-lg"
+              className="w-full p-2 border rounded-lg text-black dark:text-white"
             />
           </div>
           
@@ -358,7 +358,7 @@ export default function QuestionManager() {
                       newAnswers[index] = { ...answer, answer_text: e.target.value };
                       setNewQuestion({ ...newQuestion, answers: newAnswers });
                     }}
-                    className="w-full p-2 border rounded-lg mb-2"
+                    className="w-full p-2 border rounded-lg mb-2 text-black dark:text-white"
                     placeholder={`Answer ${index + 1}`}
                   />
                 </div>
@@ -378,7 +378,7 @@ export default function QuestionManager() {
                         }
                       }
                     }}
-                    className="w-full p-2 border rounded-lg"
+                    className="w-full p-2 border rounded-lg text-black dark:text-white"
                   />
                 </div>
               </div>
@@ -407,7 +407,7 @@ export default function QuestionManager() {
                     type="text"
                     value={editingQuestion.question_text}
                     onChange={(e) => setEditingQuestion({ ...editingQuestion, question_text: e.target.value })}
-                    className="w-full p-2 border rounded-lg"
+                    className="w-full p-2 border rounded-lg text-black dark:text-white"
                   />
                 </div>
                 <div className="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg">
@@ -425,7 +425,7 @@ export default function QuestionManager() {
                               newAnswers[index] = { ...answer, answer_text: e.target.value };
                               setEditingQuestion({ ...editingQuestion, answers: newAnswers });
                             }}
-                            className="w-full p-2 border rounded-lg"
+                            className="w-full p-2 border rounded-lg text-black dark:text-white"
                           />
                         </div>
                         <div>
@@ -459,7 +459,7 @@ export default function QuestionManager() {
                                   }
                                 }
                               }}
-                              className="w-full p-2 border rounded-lg"
+                              className="w-full p-2 border rounded-lg text-black dark:text-white"
                             />
                           )}
                         </div>
@@ -498,7 +498,7 @@ export default function QuestionManager() {
                                       newAnswers[index] = { ...answer, character_points: currentPoints };
                                       setEditingQuestion({ ...editingQuestion, answers: newAnswers });
                                     }}
-                                    className="w-20 p-1 border rounded"
+                                    className="w-20 p-1 border rounded text-black dark:text-white"
                                   />
                                 </div>
                               );

@@ -73,7 +73,7 @@ export function Input({
       placeholder={placeholder}
       required={required}
       className="w-full px-4 py-3 text-lg border-2 border-slate-200 dark:border-slate-600 
-        bg-white dark:bg-slate-700 text-slate-900 dark:text-white
+        bg-white dark:bg-slate-700 text-black dark:text-white
         rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
         placeholder:text-slate-400 dark:placeholder:text-slate-400
         shadow-sm transition-all duration-200"
