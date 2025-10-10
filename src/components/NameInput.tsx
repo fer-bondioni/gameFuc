@@ -18,19 +18,41 @@ export function NameInput() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
+      className="max-w-2xl mx-auto"
     >
-      <Card className="max-w-md mx-auto">
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <h2 className="text-3xl font-bold text-center bg-gradient-to-r from-blue-600 to-blue-800 dark:from-blue-400 dark:to-blue-600 bg-clip-text text-transparent">
-            Enter Your Name
-          </h2>
-          <Input
-            value={name}
-            onChange={setName}
-            placeholder="Your name"
-            required
-          />
-          <Button fullWidth>Start Quiz</Button>
+      <Card>
+        <form onSubmit={handleSubmit} className="space-y-8">
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ type: "spring", duration: 0.8 }}
+          >
+            <h2 className="text-4xl md:text-5xl font-extrabold text-center mb-4 bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 bg-clip-text text-transparent">
+              ¡Bienvenido!
+            </h2>
+            <p className="text-center text-xl text-gray-700 font-semibold">
+              Descubrí quién sos en la FUC 🎓
+            </p>
+          </motion.div>
+          <motion.div
+            initial={{ x: -50, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ delay: 0.3 }}
+          >
+            <Input
+              value={name}
+              onChange={setName}
+              placeholder="Ingresá tu nombre"
+              required
+            />
+          </motion.div>
+          <motion.div
+            initial={{ y: 50, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.5 }}
+          >
+            <Button fullWidth>🚀 Comenzar Quiz</Button>
+          </motion.div>
         </form>
       </Card>
     </motion.div>

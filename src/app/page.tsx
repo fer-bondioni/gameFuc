@@ -2,6 +2,7 @@
 
 import { useState, useEffect, Suspense } from "react";
 import TabNavigation from "@/components/TabNavigation";
+import Header from "@/components/Header";
 import GamePage from "./game/page";
 import StatsPage from "./stats/page";
 import DashboardPage from "./dashboard/page";
@@ -45,7 +46,8 @@ function HomeContent() {
   };
 
   return (
-    <div className="font-sans min-h-screen p-8 pb-20 sm:p-20">
+    <div className="font-sans min-h-screen p-4 pb-20 sm:p-8">
+      <Header />
       <TabNavigation activeTab={activeTab} onTabChange={handleTabChange} />
       <main className="mt-8">
         {activeTab === "game" ? (
