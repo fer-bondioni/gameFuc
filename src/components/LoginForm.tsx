@@ -36,19 +36,21 @@ export default function LoginForm() {
       // Redirect to dashboard
       window.location.href = "/?tab=dashboard";
     } catch (error) {
-      setError(error instanceof Error ? error.message : 'An error occurred');
+      setError(error instanceof Error ? error.message : 'Ocurrió un error');
     } finally {
       setLoading(false);
     }
   }
 
   return (
-    <div className="max-w-md mx-auto mt-8 p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold mb-6">Login to Dashboard</h2>
+    <div className="max-w-md mx-auto mt-8 p-6 bg-white/90 backdrop-blur-md rounded-3xl shadow-2xl border-4 border-white/20">
+      <h2 className="text-3xl font-extrabold mb-6 text-center bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 bg-clip-text text-transparent">
+        Iniciar Sesión
+      </h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label htmlFor="email" className="block text-sm font-medium mb-1">
-            Email
+          <label htmlFor="email" className="block text-sm font-bold mb-1 text-gray-900">
+            Correo Electrónico
           </label>
           <input
             id="email"
@@ -56,12 +58,12 @@ export default function LoginForm() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className="w-full p-2 border rounded-lg"
+            className="w-full p-3 border-2 border-purple-300 rounded-xl focus:outline-none focus:ring-4 focus:ring-pink-500 text-gray-900 font-medium"
           />
         </div>
         <div>
-          <label htmlFor="password" className="block text-sm font-medium mb-1">
-            Password
+          <label htmlFor="password" className="block text-sm font-bold mb-1 text-gray-900">
+            Contraseña
           </label>
           <input
             id="password"
@@ -69,27 +71,27 @@ export default function LoginForm() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
-            className="w-full p-2 border rounded-lg"
+            className="w-full p-3 border-2 border-purple-300 rounded-xl focus:outline-none focus:ring-4 focus:ring-pink-500 text-gray-900 font-medium"
           />
         </div>
         {error && (
-          <div className="text-red-600 text-sm mt-2">
+          <div className="text-red-600 text-sm mt-2 font-bold">
             {error}
           </div>
         )}
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-primary text-white py-2 px-4 rounded-lg hover:bg-primary-hover disabled:opacity-50"
+          className="w-full bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 text-white py-3 px-6 rounded-2xl font-extrabold hover:shadow-xl hover:shadow-pink-500/50 disabled:opacity-50 disabled:grayscale transition-all duration-300 transform hover:scale-105"
         >
-          {loading ? (isSignUp ? "Signing up..." : "Logging in...") : (isSignUp ? "Sign Up" : "Login")}
+          {loading ? (isSignUp ? "Registrando..." : "Iniciando sesión...") : (isSignUp ? "Registrarse" : "Iniciar Sesión")}
         </button>
         <button
           type="button"
           onClick={() => setIsSignUp(!isSignUp)}
-          className="w-full text-sm text-gray-600 hover:text-gray-800 mt-2"
+          className="w-full text-sm font-bold text-gray-700 hover:text-purple-600 mt-2 transition-colors"
         >
-          {isSignUp ? "Already have an account? Login" : "Need an account? Sign Up"}
+          {isSignUp ? "¿Ya tenés una cuenta? Iniciar Sesión" : "¿Necesitás una cuenta? Registrarse"}
         </button>
       </form>
     </div>
