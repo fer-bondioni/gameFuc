@@ -18,19 +18,19 @@ export function NameInput() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
-      className="max-w-2xl mx-auto"
+      className="max-w-2xl mx-auto w-full"
     >
       <Card>
-        <form onSubmit={handleSubmit} className="space-y-8">
+        <form onSubmit={handleSubmit} className="space-y-6 sm:space-y-8">
           <motion.div
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ type: "spring", duration: 0.8 }}
           >
-            <h2 className="text-4xl md:text-5xl font-extrabold text-center mb-4 bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 bg-clip-text text-transparent">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-center mb-3 sm:mb-4 bg-gradient-to-r from-yellow-400 via-pink-500 to-purple-600 bg-clip-text text-transparent px-2">
               ¡Bienvenido!
             </h2>
-            <p className="text-center text-xl text-gray-700 font-semibold">
+            <p className="text-center text-lg sm:text-xl text-gray-700 font-semibold px-2">
               Descubrí quién sos en la FUC 🎓
             </p>
           </motion.div>

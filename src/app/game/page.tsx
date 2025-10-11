@@ -89,7 +89,7 @@ export default function GamePage() {
   }
 
   return (
-    <main className="min-h-screen p-4 bg-gray-50">
+    <main className="min-h-screen p-2 sm:p-4 bg-gray-50">
       <AnimatePresence mode="wait">
         {currentStep === 'name' && <NameInput />}
         
@@ -172,9 +172,9 @@ export default function GamePage() {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="mt-4 text-center text-gray-600"
+          className="mt-3 sm:mt-4 text-center text-sm sm:text-base text-gray-600 font-semibold px-2"
         >
-          Question {currentQuestionIndex + 1} of {questions.length}
+          Pregunta {currentQuestionIndex + 1} de {questions.length}
         </motion.div>
       )}
     </main>

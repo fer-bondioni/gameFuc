@@ -332,25 +332,25 @@ export default function QuestionManager() {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 sm:space-y-8">
       {/* Create new question form */}
-      <div className="bg-gray-50 dark:bg-gray-900 p-6 rounded-lg">
-        <h3 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">Crear Nueva Pregunta</h3>
-        <div className="space-y-4">
+      <div className="bg-gray-50 dark:bg-gray-900 p-4 sm:p-6 rounded-lg">
+        <h3 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 text-gray-900 dark:text-white">Crear Nueva Pregunta</h3>
+        <div className="space-y-3 sm:space-y-4">
           <div>
-            <label className="block text-sm font-medium mb-1 text-gray-900 dark:text-white">Texto de la Pregunta</label>
+            <label className="block text-xs sm:text-sm font-medium mb-1 text-gray-900 dark:text-white">Texto de la Pregunta</label>
             <input
               type="text"
               value={newQuestion.question_text}
               onChange={(e) => setNewQuestion({ ...newQuestion, question_text: e.target.value })}
-              className="w-full p-3 border-2 border-gray-300 rounded-lg text-gray-900 bg-white font-medium focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+              className="w-full p-2 sm:p-3 text-sm sm:text-base border-2 border-gray-300 rounded-lg text-gray-900 bg-white font-medium focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 min-h-[44px]"
             />
           </div>
           
           <div>
-            <label className="block text-sm font-medium mb-1 text-gray-900 dark:text-white">Respuestas</label>
+            <label className="block text-xs sm:text-sm font-medium mb-1 text-gray-900 dark:text-white">Respuestas</label>
             {newQuestion.answers.map((answer, index) => (
-              <div key={index} className="mb-4">
+              <div key={index} className="mb-3 sm:mb-4">
                 <div className="mb-2">
                   <input
                     type="text"
@@ -360,12 +360,12 @@ export default function QuestionManager() {
                       newAnswers[index] = { ...answer, answer_text: e.target.value };
                       setNewQuestion({ ...newQuestion, answers: newAnswers });
                     }}
-                    className="w-full p-3 border-2 border-gray-300 rounded-lg mb-2 text-gray-900 bg-white font-medium focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                    className="w-full p-2 sm:p-3 text-sm sm:text-base border-2 border-gray-300 rounded-lg mb-2 text-gray-900 bg-white font-medium focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 min-h-[44px]"
                     placeholder={`Respuesta ${index + 1}`}
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1 text-gray-900 dark:text-white">Imagen (opcional)</label>
+                  <label className="block text-xs sm:text-sm font-medium mb-1 text-gray-900 dark:text-white">Imagen (opcional)</label>
                   <input
                     type="file"
                     accept="image/*"
@@ -380,7 +380,7 @@ export default function QuestionManager() {
                         }
                       }
                     }}
-                    className="w-full p-2 border-2 border-gray-300 rounded-lg text-gray-900 bg-white font-medium focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    className="w-full p-2 text-sm border-2 border-gray-300 rounded-lg text-gray-900 bg-white font-medium focus:outline-none focus:ring-2 focus:ring-purple-500 min-h-[44px]"
                   />
                 </div>
               </div>
@@ -389,7 +389,7 @@ export default function QuestionManager() {
 
           <button
             onClick={handleCreateQuestion}
-            className="bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 text-white px-6 py-3 rounded-2xl font-bold hover:shadow-xl hover:shadow-pink-500/50 transition-all duration-300 transform hover:scale-105"
+            className="bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 text-white px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base rounded-2xl font-bold hover:shadow-xl hover:shadow-pink-500/50 transition-all duration-300 transform hover:scale-105 min-h-[44px] w-full sm:w-auto touch-manipulation"
           >
             Crear Pregunta
           </button>
@@ -397,28 +397,28 @@ export default function QuestionManager() {
       </div>
 
       {/* List of existing questions */}
-      <div className="space-y-4">
-        <h3 className="text-xl font-semibold text-gray-900 dark:text-white">Preguntas Existentes</h3>
+      <div className="space-y-3 sm:space-y-4">
+        <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white">Preguntas Existentes</h3>
         {questions.map((question) => (
-          <div key={question.id} className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
+          <div key={question.id} className="bg-white dark:bg-gray-800 p-3 sm:p-4 rounded-lg shadow">
             {editingQuestion?.id === question.id ? (
-              <div className="space-y-4">
-                <div className="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg">
-                  <label className="block text-sm font-medium mb-1 text-gray-900 dark:text-white">Texto de la Pregunta</label>
+              <div className="space-y-3 sm:space-y-4">
+                <div className="bg-gray-50 dark:bg-gray-900 p-3 sm:p-4 rounded-lg">
+                  <label className="block text-xs sm:text-sm font-medium mb-1 text-gray-900 dark:text-white">Texto de la Pregunta</label>
                   <input
                     type="text"
                     value={editingQuestion.question_text}
                     onChange={(e) => setEditingQuestion({ ...editingQuestion, question_text: e.target.value })}
-                    className="w-full p-3 border-2 border-gray-300 rounded-lg text-gray-900 bg-white font-medium focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                    className="w-full p-2 sm:p-3 text-sm sm:text-base border-2 border-gray-300 rounded-lg text-gray-900 bg-white font-medium focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 min-h-[44px]"
                   />
                 </div>
-                <div className="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg">
-                  <h4 className="font-medium mb-3 text-gray-900 dark:text-white">Respuestas</h4>
+                <div className="bg-gray-50 dark:bg-gray-900 p-3 sm:p-4 rounded-lg">
+                  <h4 className="text-sm sm:text-base font-medium mb-2 sm:mb-3 text-gray-900 dark:text-white">Respuestas</h4>
                   {editingQuestion.answers?.map((answer, index) => (
-                    <div key={answer.id} className="mb-6 p-4 bg-white dark:bg-gray-800 rounded-lg">
-                      <div className="space-y-4">
+                    <div key={answer.id} className="mb-4 sm:mb-6 p-3 sm:p-4 bg-white dark:bg-gray-800 rounded-lg">
+                      <div className="space-y-3 sm:space-y-4">
                         <div>
-                          <label className="block text-sm font-medium mb-1 text-gray-900 dark:text-white">Texto de la Respuesta</label>
+                          <label className="block text-xs sm:text-sm font-medium mb-1 text-gray-900 dark:text-white">Texto de la Respuesta</label>
                           <input
                             type="text"
                             value={answer.answer_text}
@@ -427,14 +427,14 @@ export default function QuestionManager() {
                               newAnswers[index] = { ...answer, answer_text: e.target.value };
                               setEditingQuestion({ ...editingQuestion, answers: newAnswers });
                             }}
-                            className="w-full p-3 border-2 border-gray-300 rounded-lg text-gray-900 bg-white font-medium focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                            className="w-full p-2 sm:p-3 text-sm sm:text-base border-2 border-gray-300 rounded-lg text-gray-900 bg-white font-medium focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 min-h-[44px]"
                           />
                         </div>
                         <div>
-                          <label className="block text-sm font-medium mb-1 text-gray-900 dark:text-white">Imagen de la Respuesta</label>
+                          <label className="block text-xs sm:text-sm font-medium mb-1 text-gray-900 dark:text-white">Imagen de la Respuesta</label>
                           {answer.image_url ? (
                             <div>
-                              <div className="relative mt-2 max-w-xs h-48">
+                              <div className="relative mt-2 max-w-xs h-32 sm:h-48">
                                 <Image src={answer.image_url} alt="Answer" fill className="rounded object-contain" />
                               </div>
                               <button
@@ -443,7 +443,7 @@ export default function QuestionManager() {
                                   newAnswers[index] = { ...answer, image_url: null };
                                   setEditingQuestion({ ...editingQuestion, answers: newAnswers });
                                 }}
-                                className="text-red-600 hover:text-red-800 text-sm mt-1 font-bold"
+                                className="text-red-600 hover:text-red-800 text-xs sm:text-sm mt-1 font-bold touch-manipulation min-h-[44px] inline-flex items-center"
                               >
                                 Eliminar imagen
                               </button>
@@ -463,20 +463,20 @@ export default function QuestionManager() {
                                   }
                                 }
                               }}
-                              className="w-full p-2 border-2 border-gray-300 rounded-lg text-gray-900 bg-white font-medium focus:outline-none focus:ring-2 focus:ring-purple-500"
+                              className="w-full p-2 text-sm border-2 border-gray-300 rounded-lg text-gray-900 bg-white font-medium focus:outline-none focus:ring-2 focus:ring-purple-500 min-h-[44px]"
                             />
                           )}
                         </div>
                         <div>
-                          <label className="block text-sm font-medium mb-2 text-gray-900 dark:text-white">Puntos de Personaje</label>
-                          <div className="grid grid-cols-2 gap-4">
+                          <label className="block text-xs sm:text-sm font-medium mb-2 text-gray-900 dark:text-white">Puntos de Personaje</label>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4">
                             {characters.map(character => {
                               const characterPoint = answer.character_points?.find(
                                 cp => cp.character_id === character.id
                               );
                               return (
                                 <div key={character.id} className="flex items-center space-x-2">
-                                  <span className="text-sm">{character.name}:</span>
+                                  <span className="text-xs sm:text-sm flex-1">{character.name}:</span>
                                   <input
                                     type="number"
                                     min="0"
@@ -502,7 +502,7 @@ export default function QuestionManager() {
                                       newAnswers[index] = { ...answer, character_points: currentPoints };
                                       setEditingQuestion({ ...editingQuestion, answers: newAnswers });
                                     }}
-                                    className="w-20 p-2 border-2 border-gray-300 rounded-lg text-gray-900 bg-white font-bold focus:outline-none focus:ring-2 focus:ring-purple-500"
+                                    className="w-16 sm:w-20 p-2 text-sm border-2 border-gray-300 rounded-lg text-gray-900 bg-white font-bold focus:outline-none focus:ring-2 focus:ring-purple-500 min-h-[44px]"
                                   />
                                 </div>
                               );
@@ -513,39 +513,39 @@ export default function QuestionManager() {
                     </div>
                   ))}
                 </div>
-                <div className="flex justify-end space-x-2 mt-6">
+                <div className="flex flex-col sm:flex-row justify-end gap-2 sm:gap-2 mt-4 sm:mt-6">
                   <button
                     onClick={handleCancelEdit}
-                    className="bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white font-bold py-2 px-6 rounded-2xl transition-all duration-300 shadow-lg transform hover:scale-105"
+                    className="bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white font-bold py-2 px-4 sm:px-6 text-sm sm:text-base rounded-2xl transition-all duration-300 shadow-lg transform hover:scale-105 min-h-[44px] touch-manipulation"
                   >
                     Cancelar
                   </button>
                   <button
                     onClick={() => handleUpdateQuestion(editingQuestion)}
-                    className="bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 text-white font-bold py-2 px-6 rounded-2xl hover:shadow-xl hover:shadow-pink-500/50 transition-all duration-300 transform hover:scale-105"
+                    className="bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 text-white font-bold py-2 px-4 sm:px-6 text-sm sm:text-base rounded-2xl hover:shadow-xl hover:shadow-pink-500/50 transition-all duration-300 transform hover:scale-105 min-h-[44px] touch-manipulation"
                   >
                     Guardar Cambios
                   </button>
                 </div>
               </div>
             ) : (
-              <div className="space-y-4">
+              <div className="space-y-3 sm:space-y-4">
                 {/* Question Header */}
-                <div className="flex items-start justify-between gap-4">
-                  <div className="flex-1">
-                    <h4 className="text-lg font-bold text-gray-900 dark:text-white mb-2">{question.question_text}</h4>
+                <div className="flex flex-col sm:flex-row items-start justify-between gap-3 sm:gap-4">
+                  <div className="flex-1 w-full sm:w-auto">
+                    <h4 className="text-base sm:text-lg font-bold text-gray-900 dark:text-white mb-1 sm:mb-2">{question.question_text}</h4>
                     <span className="text-xs font-medium text-gray-500 dark:text-gray-400">Pregunta #{question.order_number}</span>
                   </div>
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 w-full sm:w-auto">
                     <button
                       onClick={() => setEditingQuestion(question)}
-                      className="px-4 py-2 bg-blue-100 hover:bg-blue-200 text-blue-700 font-bold rounded-xl transition-colors flex items-center gap-1"
+                      className="flex-1 sm:flex-none px-3 sm:px-4 py-2 text-xs sm:text-sm bg-blue-100 hover:bg-blue-200 text-blue-700 font-bold rounded-xl transition-colors flex items-center justify-center gap-1 min-h-[44px] touch-manipulation"
                     >
                       ✏️ Editar
                     </button>
                     <button
                       onClick={() => handleDeleteQuestion(question.id)}
-                      className="px-4 py-2 bg-red-100 hover:bg-red-200 text-red-700 font-bold rounded-xl transition-colors flex items-center gap-1"
+                      className="flex-1 sm:flex-none px-3 sm:px-4 py-2 text-xs sm:text-sm bg-red-100 hover:bg-red-200 text-red-700 font-bold rounded-xl transition-colors flex items-center justify-center gap-1 min-h-[44px] touch-manipulation"
                     >
                       🗑️ Eliminar
                     </button>
@@ -553,18 +553,18 @@ export default function QuestionManager() {
                 </div>
 
                 {/* Answers Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                   {question.answers?.map((answer, index) => (
-                    <div key={answer.id} className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800 p-4 rounded-xl border-2 border-gray-200 dark:border-gray-600">
-                      <div className="flex items-start gap-3">
-                        <span className="flex-shrink-0 w-7 h-7 bg-gradient-to-br from-pink-500 to-purple-600 text-white rounded-full flex items-center justify-center font-bold text-sm">
+                    <div key={answer.id} className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-800 p-3 sm:p-4 rounded-xl border-2 border-gray-200 dark:border-gray-600">
+                      <div className="flex items-start gap-2 sm:gap-3">
+                        <span className="flex-shrink-0 w-6 h-6 sm:w-7 sm:h-7 bg-gradient-to-br from-pink-500 to-purple-600 text-white rounded-full flex items-center justify-center font-bold text-xs sm:text-sm">
                           {index + 1}
                         </span>
                         <div className="flex-1 min-w-0">
-                          <p className="font-bold text-gray-900 dark:text-white mb-2 break-words">{answer.answer_text}</p>
+                          <p className="text-sm sm:text-base font-bold text-gray-900 dark:text-white mb-2 break-words">{answer.answer_text}</p>
                           
                           {answer.image_url && (
-                            <div className="relative w-full h-32 mb-2 rounded-lg overflow-hidden">
+                            <div className="relative w-full h-24 sm:h-32 mb-2 rounded-lg overflow-hidden">
                               <Image src={answer.image_url} alt="Answer" fill className="object-cover" />
                             </div>
                           )}

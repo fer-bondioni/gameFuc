@@ -24,7 +24,10 @@ export function Button({
       onClick={onClick}
       disabled={disabled}
       className={clsx(
-        'px-8 py-4 rounded-2xl font-bold transition-all text-lg shadow-xl',
+        'px-6 py-3 sm:px-8 sm:py-4 rounded-2xl font-bold transition-all',
+        'text-base sm:text-lg shadow-xl',
+        'touch-manipulation active:scale-95',
+        'min-h-[48px]', // Minimum touch target size for mobile
         fullWidth && 'w-full',
         variant === 'primary' 
           ? 'bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 text-white hover:shadow-pink-500/50' 
@@ -45,8 +48,10 @@ interface CardProps {
 export function Card({ children, className }: CardProps) {
   return (
     <div className={clsx(
-      'bg-white/90 backdrop-blur-md p-8 rounded-3xl shadow-2xl',
-      'border-4 border-white/20',
+      'bg-white/90 backdrop-blur-md rounded-3xl shadow-2xl',
+      'p-4 sm:p-6 md:p-8',
+      'border-2 sm:border-4 border-white/20',
+      'mx-2 sm:mx-4',
       className
     )}>
       {children}
@@ -76,11 +81,14 @@ export function Input({
       onChange={(e) => onChange(e.target.value)}
       placeholder={placeholder}
       required={required}
-      className="w-full px-6 py-4 text-xl border-4 border-purple-300
+      className="w-full px-4 py-3 sm:px-6 sm:py-4 text-lg sm:text-xl
+        border-2 sm:border-4 border-purple-300
         bg-white/80 backdrop-blur-sm text-gray-900 font-bold
-        rounded-2xl focus:outline-none focus:ring-4 focus:ring-pink-500 focus:border-pink-500
+        rounded-2xl focus:outline-none focus:ring-2 sm:focus:ring-4 focus:ring-pink-500 focus:border-pink-500
         placeholder:text-purple-400
-        shadow-xl transition-all duration-300"
+        shadow-xl transition-all duration-300
+        touch-manipulation
+        min-h-[48px]"
     />
   );
 }
